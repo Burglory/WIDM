@@ -6,11 +6,13 @@ import javax.swing.JFrame;
 
 import com.gynt.widm.languages.LanguagePack;
 import com.gynt.widm.languages.LanguagePackIO;
+import com.gynt.widm.resources.icons.ExamEditIcon;
 import com.gynt.widm.resources.icons.ExamStartIcon;
 import com.gynt.widm.resources.icons.ExecutionStartIcon;
 import com.gynt.widm.resources.icons.NextRoundIcon;
 import com.gynt.widm.resources.icons.PreviousRoundIcon;
 import com.gynt.widm.resources.icons.ProgressNextRoundIcon;
+import com.gynt.widm.resources.icons.SettingsIcon;
 
 import javax.swing.JLabel;
 import java.awt.BorderLayout;
@@ -25,6 +27,10 @@ import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import javax.swing.JList;
 
 public class GUI {
 	
@@ -97,48 +103,101 @@ public class GUI {
 		toolBar.setFloatable(false);
 		frmWidm.getContentPane().add(toolBar, BorderLayout.NORTH);
 		
+		toolBar.addSeparator();
 		JButton btnStartExam = new JButton("");
+		btnStartExam.setToolTipText("Run the exam for this round.");
 		btnStartExam.setIcon(new ImageIcon(ExamStartIcon.getImage()));
 		btnStartExam.setFocusPainted(false);
 		toolBar.add(btnStartExam);
+		
+		JButton btnEditexam = new JButton("");
+		btnEditexam.setToolTipText("Edit the exam.");
+		btnEditexam.setIcon(new ImageIcon(ExamEditIcon.getImage()));
+		btnEditexam.setFocusPainted(false);
+		toolBar.add(btnEditexam);
 		toolBar.addSeparator();
 		
 		JButton btnStartExecution = new JButton("");
+		btnStartExecution.setToolTipText("Run the execution for this round.");
 		btnStartExecution.setIcon(new ImageIcon(ExecutionStartIcon.getImage()));
 		btnStartExecution.setFocusPainted(false);
 		toolBar.add(btnStartExecution);
 		
 		JButton btnProgressToNew = new JButton("");
+		btnProgressToNew.setToolTipText("Progress to next round and leave out executed player(s).");
 		btnProgressToNew.setIcon(new ImageIcon(ProgressNextRoundIcon.getImage()));
 		btnProgressToNew.setFocusPainted(false);
 		toolBar.add(btnProgressToNew);
 		toolBar.addSeparator();
 		
 		JButton btnPreviousEpisode = new JButton("");
+		btnPreviousEpisode.setToolTipText("Previous round.");
 		btnPreviousEpisode.setIcon(new ImageIcon(PreviousRoundIcon.getImage()));
 		btnPreviousEpisode.setFocusPainted(false);
 		toolBar.add(btnPreviousEpisode);
 		
 		JButton btnNextEpisode = new JButton("");
+		btnNextEpisode.setToolTipText("Next round.");
 		btnNextEpisode.setIcon(new ImageIcon(NextRoundIcon.getImage()));
 		btnNextEpisode.setFocusPainted(false);
 		toolBar.add(btnNextEpisode);
+		toolBar.addSeparator();
+		
+		JButton btnSettings = new JButton("");
+		btnSettings.setToolTipText("Access the settings.");
+		btnSettings.setIcon(new ImageIcon(SettingsIcon.getImage()));
+		btnSettings.setFocusPainted(false);
+		toolBar.add(btnSettings);
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		frmWidm.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 		
 		JPanel panel = new JPanel();
 		tabbedPane.addTab("Players", null, panel, null);
+		GridBagLayout gbl_panel = new GridBagLayout();
+		gbl_panel.columnWidths = new int[] {0, 0};
+		gbl_panel.rowHeights = new int[] {0, 0, 0, 50};
+		gbl_panel.columnWeights = new double[]{0.0, 1.0};
+		gbl_panel.rowWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
+		panel.setLayout(gbl_panel);
 		
-		JPanel panel_1 = new JPanel();
-		tabbedPane.addTab("Exam", null, panel_1, null);
+		JLabel lblCurrentRound = new JLabel("Current round:");
+		GridBagConstraints gbc_lblCurrentRound = new GridBagConstraints();
+		gbc_lblCurrentRound.insets = new Insets(0, 0, 5, 5);
+		gbc_lblCurrentRound.gridx = 0;
+		gbc_lblCurrentRound.gridy = 0;
+		panel.add(lblCurrentRound, gbc_lblCurrentRound);
 		
-		JPanel panel_2 = new JPanel();
-		tabbedPane.addTab("Execution", null, panel_2, null);
+		JLabel label = new JLabel("0");
+		GridBagConstraints gbc_label = new GridBagConstraints();
+		gbc_label.anchor = GridBagConstraints.WEST;
+		gbc_label.insets = new Insets(0, 0, 5, 0);
+		gbc_label.gridx = 1;
+		gbc_label.gridy = 0;
+		panel.add(label, gbc_label);
 		
-		JPanel panel_3 = new JPanel();
-		tabbedPane.addTab("Statistics", null, panel_3, null);
+		JLabel lblCurrentPlayers = new JLabel("Players in round:");
+		GridBagConstraints gbc_lblCurrentPlayers = new GridBagConstraints();
+		gbc_lblCurrentPlayers.anchor = GridBagConstraints.NORTH;
+		gbc_lblCurrentPlayers.insets = new Insets(0, 0, 5, 5);
+		gbc_lblCurrentPlayers.gridx = 0;
+		gbc_lblCurrentPlayers.gridy = 1;
+		panel.add(lblCurrentPlayers, gbc_lblCurrentPlayers);
+		
+		JList list = new JList();
+		GridBagConstraints gbc_list = new GridBagConstraints();
+		gbc_list.insets = new Insets(0, 0, 5, 0);
+		gbc_list.fill = GridBagConstraints.BOTH;
+		gbc_list.gridx = 1;
+		gbc_list.gridy = 1;
+		panel.add(list, gbc_list);
+		
+		JLabel lblNewLabel = new JLabel("New label");
+		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
+		gbc_lblNewLabel.insets = new Insets(0, 0, 0, 5);
+		gbc_lblNewLabel.gridx = 0;
+		gbc_lblNewLabel.gridy = 2;
+		panel.add(lblNewLabel, gbc_lblNewLabel);
 	}
 
 }
