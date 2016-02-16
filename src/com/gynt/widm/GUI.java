@@ -6,6 +6,11 @@ import javax.swing.JFrame;
 
 import com.gynt.widm.languages.LanguagePack;
 import com.gynt.widm.languages.LanguagePackIO;
+import com.gynt.widm.resources.icons.ExamStartIcon;
+import com.gynt.widm.resources.icons.ExecutionStartIcon;
+import com.gynt.widm.resources.icons.NextRoundIcon;
+import com.gynt.widm.resources.icons.PreviousRoundIcon;
+import com.gynt.widm.resources.icons.ProgressNextRoundIcon;
 
 import javax.swing.JLabel;
 import java.awt.BorderLayout;
@@ -18,6 +23,8 @@ import javax.swing.JToolBar;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
+import javax.swing.JTabbedPane;
+import javax.swing.JPanel;
 
 public class GUI {
 	
@@ -27,6 +34,11 @@ public class GUI {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		try {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 		try {
 			//UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
 		} catch (Throwable e) {
@@ -84,31 +96,49 @@ public class GUI {
 		JToolBar toolBar = new JToolBar();
 		toolBar.setFloatable(false);
 		frmWidm.getContentPane().add(toolBar, BorderLayout.NORTH);
-		frmWidm.getContentPane().add(new PlayersPanel(), BorderLayout.CENTER);
 		
-		JButton btnStartExam = new JButton("Start exam");
+		JButton btnStartExam = new JButton("");
+		btnStartExam.setIcon(new ImageIcon(ExamStartIcon.getImage()));
+		btnStartExam.setFocusPainted(false);
 		toolBar.add(btnStartExam);
+		toolBar.addSeparator();
 		
-		JButton btnEditExam = new JButton("Edit exam");
-		toolBar.add(btnEditExam);
-		
-		JButton btnPlayers = new JButton("Players");
-		toolBar.add(btnPlayers);
-		
-		JButton btnStartExecution = new JButton("Start execution");
+		JButton btnStartExecution = new JButton("");
+		btnStartExecution.setIcon(new ImageIcon(ExecutionStartIcon.getImage()));
+		btnStartExecution.setFocusPainted(false);
 		toolBar.add(btnStartExecution);
 		
-		JButton btnEditExecution = new JButton("Edit execution");
-		toolBar.add(btnEditExecution);
-		
-		JButton btnProgressToNew = new JButton("Progress to new episode");
+		JButton btnProgressToNew = new JButton("");
+		btnProgressToNew.setIcon(new ImageIcon(ProgressNextRoundIcon.getImage()));
+		btnProgressToNew.setFocusPainted(false);
 		toolBar.add(btnProgressToNew);
+		toolBar.addSeparator();
 		
-		JButton btnPreviousEpisode = new JButton("Previous episode");
+		JButton btnPreviousEpisode = new JButton("");
+		btnPreviousEpisode.setIcon(new ImageIcon(PreviousRoundIcon.getImage()));
+		btnPreviousEpisode.setFocusPainted(false);
 		toolBar.add(btnPreviousEpisode);
 		
-		JButton btnNextEpisode = new JButton("Next episode");
+		JButton btnNextEpisode = new JButton("");
+		btnNextEpisode.setIcon(new ImageIcon(NextRoundIcon.getImage()));
+		btnNextEpisode.setFocusPainted(false);
 		toolBar.add(btnNextEpisode);
+		
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+		frmWidm.getContentPane().add(tabbedPane, BorderLayout.CENTER);
+		
+		JPanel panel = new JPanel();
+		tabbedPane.addTab("Players", null, panel, null);
+		
+		JPanel panel_1 = new JPanel();
+		tabbedPane.addTab("Exam", null, panel_1, null);
+		
+		JPanel panel_2 = new JPanel();
+		tabbedPane.addTab("Execution", null, panel_2, null);
+		
+		JPanel panel_3 = new JPanel();
+		tabbedPane.addTab("Statistics", null, panel_3, null);
 	}
 
 }
