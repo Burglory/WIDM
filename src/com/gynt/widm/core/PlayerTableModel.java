@@ -14,26 +14,34 @@ public class PlayerTableModel extends DefaultTableModel {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private List<Player> items = new ArrayList<Player>();
+	private List<PropertyDescriptable> items = new ArrayList<PropertyDescriptable>();
 
-	public PlayerTableModel(List<Player> i) {
-		super(i.size(), Player.PROPERTY_DESCRIPTORS.size());
-		this.items = i;
+	private List<PropertyDescriptor> propertydescriptors = new ArrayList<PropertyDescriptor>();
+
+	public PlayerTableModel(List<PropertyDescriptor> propertydescriptors, List<PropertyDescriptable> items) {
+		super(items.size(), propertydescriptors.size());
+		this.items = items;
+		this.propertydescriptors = propertydescriptors;
+	}
+	
+	public List<PropertyDescriptable> getItems() {
+		return this.items;
 	}
 
 	@Override
 	public Class<?> getColumnClass(int columnIndex) {
-		return Player.PROPERTY_DESCRIPTORS.get(columnIndex).getPropertydatatype();
+		return propertydescriptors.get(columnIndex).getPropertydatatype();
 	}
 
 	@Override
 	public int getColumnCount() {
-		return Player.PROPERTY_DESCRIPTORS.size();
+		if(propertydescriptors == null) return super.getColumnCount();
+		return propertydescriptors.size();
 	}
 
 	@Override
 	public String getColumnName(int columnIndex) {
-		return Player.PROPERTY_DESCRIPTORS.get(columnIndex).getPropertyname();
+		return propertydescriptors.get(columnIndex).getPropertyname();
 	}
 
 	@Override
@@ -44,12 +52,12 @@ public class PlayerTableModel extends DefaultTableModel {
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		return this.items.get(rowIndex).getProperty(Player.PROPERTY_DESCRIPTORS.get(columnIndex).getPropertyname());
+		return this.items.get(rowIndex).getProperty(propertydescriptors.get(columnIndex).getPropertyname());
 	}
 
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		this.items.get(rowIndex).setProperty(Player.PROPERTY_DESCRIPTORS.get(columnIndex).getPropertyname(), aValue);
+		this.items.get(rowIndex).setProperty(propertydescriptors.get(columnIndex).getPropertyname(), aValue);
 		this.fireTableCellUpdated(rowIndex, columnIndex);
 	}
 
@@ -72,7 +80,7 @@ public class PlayerTableModel extends DefaultTableModel {
 				int index = columnModel.getColumnIndexAtX(p.x);
 				int realIndex = 
 						columnModel.getColumn(index).getModelIndex();
-				return Player.PROPERTY_DESCRIPTORS.get(realIndex).getPropertydescription();
+				return propertydescriptors.get(realIndex).getPropertydescription();
 			}
 		};
 	}
