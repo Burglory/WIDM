@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 
+import com.gynt.widm.core.Player;
 import com.gynt.widm.languages.LanguagePack;
 import com.gynt.widm.languages.LanguagePackIO;
 import com.gynt.widm.resources.icons.ExamEditIcon;
@@ -32,9 +33,13 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JList;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.awt.event.ActionEvent;
 
 public class GUI {
 	
+	public static boolean DebugMode = true;
 	private JFrame frmWidm;
 
 	/**
@@ -86,6 +91,12 @@ public class GUI {
 		menuBar.add(mnFile);
 		
 		JMenuItem mntmNew = new JMenuItem("New");
+		mntmNew.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				NewGameFrame ngf = new NewGameFrame(new ArrayList<Player>());
+				ngf.setVisible(true);
+			}
+		});
 		mnFile.add(mntmNew);
 		
 		JMenuItem mntmOpen = new JMenuItem("Open...");
@@ -168,8 +179,8 @@ public class GUI {
 		JPanel panel = new JPanel();
 		tabbedPane.addTab("Players", null, panel, null);
 		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[] {0, 100, 100};
-		gbl_panel.rowHeights = new int[] {0, 0, 0, 50};
+		gbl_panel.columnWidths = new int[] {0, 0, 0};
+		gbl_panel.rowHeights = new int[] {0, 0, 0, 0};
 		gbl_panel.columnWeights = new double[]{0.0, 1.0};
 		gbl_panel.rowWeights = new double[]{0.0, 1.0, 1.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
@@ -200,8 +211,9 @@ public class GUI {
 		
 		JList list = new JList();
 		GridBagConstraints gbc_list = new GridBagConstraints();
-		gbc_list.insets = new Insets(0, 0, 5, 0);
 		gbc_list.fill = GridBagConstraints.BOTH;
+		gbc_list.weightx = 0.5;
+		gbc_list.insets = new Insets(0, 0, 5, 0);
 		gbc_list.gridx = 1;
 		gbc_list.gridy = 1;
 		panel.add(list, gbc_list);
@@ -216,6 +228,7 @@ public class GUI {
 		
 		JList list_1 = new JList();
 		GridBagConstraints gbc_list_1 = new GridBagConstraints();
+		gbc_list_1.weightx = 0.5;
 		gbc_list_1.fill = GridBagConstraints.BOTH;
 		gbc_list_1.gridx = 1;
 		gbc_list_1.gridy = 2;
