@@ -8,6 +8,7 @@ import com.gynt.widm.languages.LanguagePack;
 import com.gynt.widm.languages.LanguagePackIO;
 import com.gynt.widm.resources.icons.ExamEditIcon;
 import com.gynt.widm.resources.icons.ExamStartIcon;
+import com.gynt.widm.resources.icons.ExecutionEditIcon;
 import com.gynt.widm.resources.icons.ExecutionStartIcon;
 import com.gynt.widm.resources.icons.NextRoundIcon;
 import com.gynt.widm.resources.icons.PreviousRoundIcon;
@@ -90,11 +91,17 @@ public class GUI {
 		JMenuItem mntmOpen = new JMenuItem("Open...");
 		mnFile.add(mntmOpen);
 		
+		JSeparator separator = new JSeparator();
+		mnFile.add(separator);
+		
 		JMenuItem mntmSave = new JMenuItem("Save");
 		mnFile.add(mntmSave);
 		
 		JMenuItem mntmSaveAs = new JMenuItem("Save as...");
 		mnFile.add(mntmSaveAs);
+		
+		JSeparator separator_1 = new JSeparator();
+		mnFile.add(separator_1);
 		
 		JMenuItem mntmExit = new JMenuItem("Exit");
 		mnFile.add(mntmExit);
@@ -122,6 +129,12 @@ public class GUI {
 		btnStartExecution.setIcon(new ImageIcon(ExecutionStartIcon.getImage()));
 		btnStartExecution.setFocusPainted(false);
 		toolBar.add(btnStartExecution);
+		
+		JButton btnEditexecution = new JButton("");
+		btnEditexecution.setToolTipText("Edit the execution.");
+		btnEditexecution.setIcon(new ImageIcon(ExecutionEditIcon.getImage()));
+		btnEditexecution.setFocusPainted(false);
+		toolBar.add(btnEditexecution);
 		
 		JButton btnProgressToNew = new JButton("");
 		btnProgressToNew.setToolTipText("Progress to next round and leave out executed player(s).");
@@ -155,14 +168,15 @@ public class GUI {
 		JPanel panel = new JPanel();
 		tabbedPane.addTab("Players", null, panel, null);
 		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[] {0, 0};
+		gbl_panel.columnWidths = new int[] {0, 100, 100};
 		gbl_panel.rowHeights = new int[] {0, 0, 0, 50};
 		gbl_panel.columnWeights = new double[]{0.0, 1.0};
-		gbl_panel.rowWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.rowWeights = new double[]{0.0, 1.0, 1.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
 		JLabel lblCurrentRound = new JLabel("Current round:");
 		GridBagConstraints gbc_lblCurrentRound = new GridBagConstraints();
+		gbc_lblCurrentRound.anchor = GridBagConstraints.NORTH;
 		gbc_lblCurrentRound.insets = new Insets(0, 0, 5, 5);
 		gbc_lblCurrentRound.gridx = 0;
 		gbc_lblCurrentRound.gridy = 0;
@@ -192,12 +206,20 @@ public class GUI {
 		gbc_list.gridy = 1;
 		panel.add(list, gbc_list);
 		
-		JLabel lblNewLabel = new JLabel("New label");
+		JLabel lblNewLabel = new JLabel("Players in game:");
 		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-		gbc_lblNewLabel.insets = new Insets(0, 0, 0, 5);
+		gbc_lblNewLabel.anchor = GridBagConstraints.NORTH;
+		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNewLabel.gridx = 0;
 		gbc_lblNewLabel.gridy = 2;
 		panel.add(lblNewLabel, gbc_lblNewLabel);
+		
+		JList list_1 = new JList();
+		GridBagConstraints gbc_list_1 = new GridBagConstraints();
+		gbc_list_1.fill = GridBagConstraints.BOTH;
+		gbc_list_1.gridx = 1;
+		gbc_list_1.gridy = 2;
+		panel.add(list_1, gbc_list_1);
 	}
 
 }
