@@ -69,11 +69,9 @@ public class NewGameFrame extends JFrame {
 	private Box horizontalBox_1;
 	private JPanel panel_4;
 	private JPanel panel_5;
-	private JList<Player> bowl;
 	private JButton btnSelect;
 	private Box verticalBox;
 	private JButton btnDeselect;
-	private JList<Player> selection;
 	protected ArrayList<Player> bowlList;
 	protected ArrayList<Player> selectionList;
 	private JPanel panel_6;
@@ -88,6 +86,8 @@ public class NewGameFrame extends JFrame {
 	private Box verticalBox_3;
 	private JLabel lblAllPlayers;
 	private JLabel lblSelection;
+	private JTable table_1;
+	private JTable table_2;
 
 	/**
 	 * Launch the application.
@@ -110,6 +110,7 @@ public class NewGameFrame extends JFrame {
 		this.players = players;
 		this.ptm = new PlayerTableModel(Player.PROPERTY_DESCRIPTORS, new ArrayList<PropertyDescriptable>(this.players));
 		table.setModel(ptm);
+		table.repaint();
 	}
 
 	/**
@@ -183,12 +184,12 @@ public class NewGameFrame extends JFrame {
 		panel_4.addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentShown(ComponentEvent arg0) {
-				System.out.println("set omdels");
-				bowl.setModel(new PlayerListModel<Player>(players));
-				selectionList = new ArrayList<Player>();
-				selection.setModel(new PlayerListModel<Player>(selectionList));
-				bowl.repaint();
-				selection.repaint();
+				System.out.println("set models");
+				table_1.setModel(new PlayerTableModel(Player.PROPERTY_DESCRIPTORS, new ArrayList<PropertyDescriptable>(players)));
+				table_1.getColumnModel().removeColumn(table_1.getColumnModel().getColumn(0));
+				table_1.getColumnModel().removeColumn(table_1.getColumnModel().getColumn(1));
+				table_1.getColumnModel().removeColumn(table_1.getColumnModel().getColumn(1));
+				table_1.repaint();
 			}
 		});
 		panel.add(panel_4, "name_14997351528952");
@@ -196,34 +197,21 @@ public class NewGameFrame extends JFrame {
 
 		panel_5 = new JPanel();
 		panel_4.add(panel_5, BorderLayout.CENTER);
-		GridBagLayout gbl_panel_5 = new GridBagLayout();
-		gbl_panel_5.columnWidths = new int[] {0, 0, 0};
-		gbl_panel_5.rowHeights = new int[] {0};
-		gbl_panel_5.columnWeights = new double[] { 0.0, 0.0, 0.0 };
-		gbl_panel_5.rowWeights = new double[] { 0.0 };
-		panel_5.setLayout(gbl_panel_5);
+		panel_5.setLayout(new BorderLayout(0, 0));
 		
 		verticalBox_2 = Box.createVerticalBox();
-		GridBagConstraints gbc_verticalBox_2 = new GridBagConstraints();
-		gbc_verticalBox_2.fill = GridBagConstraints.BOTH;
-		gbc_verticalBox_2.insets = new Insets(0, 0, 5, 5);
-		gbc_verticalBox_2.gridx = 0;
-		gbc_verticalBox_2.gridy = 0;
-		panel_5.add(verticalBox_2, gbc_verticalBox_2);
+		verticalBox_2.setAlignmentY(Component.TOP_ALIGNMENT);
+		panel_5.add(verticalBox_2, BorderLayout.WEST);
 				
 				lblAllPlayers = new JLabel("All players");
 				verticalBox_2.add(lblAllPlayers);
-		
-				bowl = new JList<Player>();
-				verticalBox_2.add(bowl);
+				
+				table_1 = new JTable();
+				table_1.setFillsViewportHeight(true);
+				verticalBox_2.add(table_1);
 
 		verticalBox = Box.createVerticalBox();
-		GridBagConstraints gbc_verticalBox = new GridBagConstraints();
-		gbc_verticalBox.fill = GridBagConstraints.BOTH;
-		gbc_verticalBox.insets = new Insets(0, 0, 5, 5);
-		gbc_verticalBox.gridx = 1;
-		gbc_verticalBox.gridy = 0;
-		panel_5.add(verticalBox, gbc_verticalBox);
+		panel_5.add(verticalBox, BorderLayout.CENTER);
 
 		btnSelect = new JButton(">");
 		btnSelect.setToolTipText("Add to selection.");
@@ -234,18 +222,13 @@ public class NewGameFrame extends JFrame {
 		verticalBox.add(btnDeselect);
 		
 		verticalBox_3 = Box.createVerticalBox();
-		GridBagConstraints gbc_verticalBox_3 = new GridBagConstraints();
-		gbc_verticalBox_3.fill = GridBagConstraints.BOTH;
-		gbc_verticalBox_3.insets = new Insets(0, 0, 0, 5);
-		gbc_verticalBox_3.gridx = 2;
-		gbc_verticalBox_3.gridy = 0;
-		panel_5.add(verticalBox_3, gbc_verticalBox_3);
+		panel_5.add(verticalBox_3, BorderLayout.EAST);
 				
 				lblSelection = new JLabel("Selection");
 				verticalBox_3.add(lblSelection);
-		
-				selection = new JList<Player>();
-				verticalBox_3.add(selection);
+				
+				table_2 = new JTable();
+				verticalBox_3.add(table_2);
 
 		panel_6 = new JPanel();
 		FlowLayout flowLayout_1 = (FlowLayout) panel_6.getLayout();
