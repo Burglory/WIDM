@@ -15,7 +15,7 @@ import javax.swing.border.EmptyBorder;
 import com.gynt.debug.DebugData;
 import com.gynt.widm.core.Player;
 import com.gynt.widm.core.PlayerListModel;
-import com.gynt.widm.core.PlayerTableModel;
+import com.gynt.widm.core.PropertyDescriptorTableModel;
 import com.gynt.widm.core.PropertyDescriptable;
 import com.gynt.widm.core.PropertyDescriptor;
 
@@ -53,7 +53,7 @@ public class NewGameFrame extends JFrame {
 
 	private JPanel contentPane;
 	private List<Player> players;
-	private PlayerTableModel ptm;
+	private PropertyDescriptorTableModel ptm;
 	private JPanel panel;
 	private JScrollPane scrollPane;
 	private JTable table;
@@ -108,7 +108,7 @@ public class NewGameFrame extends JFrame {
 	public NewGameFrame(List<Player> players) {
 		this();
 		this.players = players;
-		this.ptm = new PlayerTableModel(Player.PROPERTY_DESCRIPTORS, new ArrayList<PropertyDescriptable>(this.players));
+		this.ptm = new PropertyDescriptorTableModel(Player.PROPERTY_DESCRIPTORS, new ArrayList<PropertyDescriptable>(this.players));
 		table.setModel(ptm);
 		table.repaint();
 	}
@@ -177,7 +177,7 @@ public class NewGameFrame extends JFrame {
 		table = new JTable();
 		table.setFillsViewportHeight(true);
 		table.setModel(
-				new PlayerTableModel(new ArrayList<PropertyDescriptor>(), new ArrayList<PropertyDescriptable>()));
+				new PropertyDescriptorTableModel(new ArrayList<PropertyDescriptor>(), new ArrayList<PropertyDescriptable>()));
 		scrollPane.setViewportView(table);
 
 		panel_4 = new JPanel();
@@ -185,7 +185,7 @@ public class NewGameFrame extends JFrame {
 			@Override
 			public void componentShown(ComponentEvent arg0) {
 				System.out.println("set models");
-				table_1.setModel(new PlayerTableModel(Player.PROPERTY_DESCRIPTORS, new ArrayList<PropertyDescriptable>(players)));
+				table_1.setModel(new PropertyDescriptorTableModel(Player.PROPERTY_DESCRIPTORS, new ArrayList<PropertyDescriptable>(players)));
 				table_1.getColumnModel().removeColumn(table_1.getColumnModel().getColumn(0));
 				table_1.getColumnModel().removeColumn(table_1.getColumnModel().getColumn(1));
 				table_1.getColumnModel().removeColumn(table_1.getColumnModel().getColumn(1));
@@ -285,7 +285,7 @@ public class NewGameFrame extends JFrame {
 
 		if (GUI.DebugMode) {
 			this.players = DebugData.playerdebug;
-			this.ptm = new PlayerTableModel(Player.PROPERTY_DESCRIPTORS,
+			this.ptm = new PropertyDescriptorTableModel(Player.PROPERTY_DESCRIPTORS,
 					new ArrayList<PropertyDescriptable>(this.players));
 			table.setModel(ptm);
 		}

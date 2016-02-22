@@ -7,7 +7,7 @@ import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
-public class PlayerTableModel extends DefaultTableModel {
+public class PropertyDescriptorTableModel extends DefaultTableModel {
 
 	/**
 	 * 
@@ -18,7 +18,7 @@ public class PlayerTableModel extends DefaultTableModel {
 
 	private List<PropertyDescriptor> propertydescriptors = new ArrayList<PropertyDescriptor>();
 
-	public PlayerTableModel(List<PropertyDescriptor> propertydescriptors, List<PropertyDescriptable> items) {
+	public PropertyDescriptorTableModel(List<PropertyDescriptor> propertydescriptors, List<PropertyDescriptable> items) {
 		super(items.size(), propertydescriptors.size());
 		this.items = items;
 		this.propertydescriptors = propertydescriptors;

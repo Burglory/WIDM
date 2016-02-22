@@ -5,10 +5,15 @@ import java.util.List;
 import java.util.Set;
 
 public abstract class PropertyDescriptable {
-
+	
+	private HashMap<String, Object> properties = new HashMap<String, Object>();
+	
 	public abstract List<PropertyDescriptor> getPropertyDescriptors();
 	
-	private HashMap<String, Object> properties = new HashMap<String, Object>();;
+	public abstract void addPropertyDescriptor(PropertyDescriptor p);
+	
+	public abstract void removePropertyDescriptor(String name);
+	
 	
 	private boolean containsProperty(String propertyname) {
 		for (PropertyDescriptor p : getPropertyDescriptors()) {

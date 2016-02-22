@@ -23,6 +23,18 @@ public class Player extends PropertyDescriptable {
 	@Override
 	public List<PropertyDescriptor> getPropertyDescriptors() {
 		return PROPERTY_DESCRIPTORS;
+	}
+
+	@Override
+	public void addPropertyDescriptor(PropertyDescriptor p) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removePropertyDescriptor(String name) {
+		// TODO Auto-generated method stub
+		
 	}	
 
 }
