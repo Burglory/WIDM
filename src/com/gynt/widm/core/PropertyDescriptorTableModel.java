@@ -19,13 +19,13 @@ public class PropertyDescriptorTableModel extends DefaultTableModel {
 
 	private List<PropertyDescriptor> propertydescriptors = new ArrayList<PropertyDescriptor>();
 
-	public PropertyDescriptorTableModel(List<PropertyDescriptor> propertydescriptors, List<PropertyDescriptable> items) {
+	public PropertyDescriptorTableModel(List<PropertyDescriptor> propertydescriptors, List<? extends PropertyDescriptable> items) {
 		super(items.size(), propertydescriptors.size());
-		this.items = items;
+		this.items = (List<PropertyDescriptable>) items;
 		this.propertydescriptors = propertydescriptors;
 	}
 	
-	public List<PropertyDescriptable> getItems() {
+	public List<? extends PropertyDescriptable> getItems() {
 		return this.items;
 	}
 	

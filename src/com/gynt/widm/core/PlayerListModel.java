@@ -41,7 +41,13 @@ public class PlayerListModel extends DefaultListModel<String> {
 	
 	public void addPlayer(Player p) {
 		this.players.add(p);
-		this.fireContentsChanged(this, this.players.size()-1, this.players.size()-1);
+		this.fireIntervalAdded(this, this.players.size()-1, this.players.size()-1);
+	}
+	
+	public void removeAllPlayers() {
+		int size = this.players.size();
+		this.players.clear();
+		this.fireIntervalRemoved(this, 0, size-1);
 	}
 	
 	public void removePlayer(Player p) {
