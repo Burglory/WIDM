@@ -11,16 +11,16 @@ public class DebugData {
 	static {
 		playerdebug = new ArrayList<Player>();
 		Player p = new Player("A");
-		p.setProperty("Name", "A");
+		p.setProperty("name", "A");
 		playerdebug.add(p);
 		p = new Player("B");
-		p.setProperty("Name", "B");
+		p.setProperty("name", "B");
 		playerdebug.add(p);
 		p = new Player("C");
-		p.setProperty("Name", "C");
+		p.setProperty("name", "C");
 		playerdebug.add(p);
 		p = new Player("D");
-		p.setProperty("Name", "D");
+		p.setProperty("name", "D");
 		playerdebug.add(p);
 	}
 	

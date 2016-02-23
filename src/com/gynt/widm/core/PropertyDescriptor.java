@@ -14,14 +14,16 @@ public class PropertyDescriptor {
 	private String propertydescription;
 	private Class<?> propertydatatype;
 	private String list;
+	private String propertydisplayname;
 
 	private static final String separationcharacter = "|";
 
-	public PropertyDescriptor(String propertyname, String propertydescription, Class<?> propertydatatype, String list) {
+	public PropertyDescriptor(String propertyname, String propertydisplayname, String propertydescription, Class<?> propertydatatype, String list) {
 		this.propertyname = propertyname;
 		this.propertydescription = propertydescription;
 		this.propertydatatype = propertydatatype;
 		this.list = list;
+		this.setPropertydisplayname(propertydisplayname);
 	}
 
 	public String getPropertyname() {
@@ -56,28 +58,28 @@ public class PropertyDescriptor {
 		this.list = list;
 	}
 
-	public static final Collection<PropertyDescriptor> readFromFile(File file) {
-
-		try {
-			List<PropertyDescriptor> result = new ArrayList<PropertyDescriptor>();
-			List<String> lines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
-			for (String line : lines) {
-				String[] segments = line.split(separationcharacter);
-				Class<?> c = null;
-				try {
-					c = Class.forName(segments[2]);
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-					c = String.class;
-				}
-				result.add(new PropertyDescriptor(segments[0], segments[1], c, segments[3]));
-			}
-			return result;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+//	public static final Collection<PropertyDescriptor> readFromFile(File file) {
+//
+//		try {
+//			List<PropertyDescriptor> result = new ArrayList<PropertyDescriptor>();
+//			List<String> lines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
+//			for (String line : lines) {
+//				String[] segments = line.split(separationcharacter);
+//				Class<?> c = null;
+//				try {
+//					c = Class.forName(segments[2]);
+//				} catch (ClassNotFoundException e) {
+//					e.printStackTrace();
+//					c = String.class;
+//				}
+//				result.add(new PropertyDescriptor(segments[0], segments[1], c, segments[3]));
+//			}
+//			return result;
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		return null;
+//	}
 	
 	@Override
 	public String toString() {
@@ -96,5 +98,13 @@ public class PropertyDescriptor {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public String getPropertydisplayname() {
+		return propertydisplayname;
+	}
+
+	public void setPropertydisplayname(String propertydisplayname) {
+		this.propertydisplayname = propertydisplayname;
 	}
 }

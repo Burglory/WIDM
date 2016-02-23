@@ -2,6 +2,7 @@ package com.gynt.widm.core;
 
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.table.DefaultTableModel;
@@ -27,6 +28,33 @@ public class PropertyDescriptorTableModel extends DefaultTableModel {
 	public List<PropertyDescriptable> getItems() {
 		return this.items;
 	}
+	
+	public void addItem(PropertyDescriptable p) {
+		this.items.add(p);
+		this.fireTableRowsInserted(this.items.size()-1, this.items.size()-1);
+	}
+	
+	public void removeItem(int index) {
+		this.items.remove(index);
+		this.fireTableRowsDeleted(index, index);
+	}
+	
+	public void removeItem(PropertyDescriptable p) {
+		int rowindex = this.items.indexOf(p);
+		this.items.remove(p);
+		this.fireTableRowsDeleted(rowindex, rowindex);
+	}
+	
+	public void removeItems(int[] indexes) {
+		List<Integer> list = new ArrayList<Integer>();
+		for (int index : indexes) {
+			list.add(index);
+		}
+		Collections.reverse(list);
+		for (int i : list) {
+			this.removeItem(i);
+		}
+	}
 
 	@Override
 	public Class<?> getColumnClass(int columnIndex) {
@@ -41,7 +69,7 @@ public class PropertyDescriptorTableModel extends DefaultTableModel {
 
 	@Override
 	public String getColumnName(int columnIndex) {
-		return propertydescriptors.get(columnIndex).getPropertyname();
+		return propertydescriptors.get(columnIndex).getPropertydisplayname();
 	}
 
 	@Override

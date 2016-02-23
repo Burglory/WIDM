@@ -48,6 +48,7 @@ import java.awt.event.ComponentEvent;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
+import javax.swing.AbstractListModel;
 
 public class NewGameFrame extends JFrame {
 
@@ -86,8 +87,14 @@ public class NewGameFrame extends JFrame {
 	private Box verticalBox_3;
 	private JLabel lblAllPlayers;
 	private JLabel lblSelection;
-	private JTable table_1;
-	private JTable table_2;
+	private JList<String> list_2;
+	private JScrollPane scrollPane_1;
+	private JScrollPane scrollPane_2;
+	private JList<String> list_1;
+	private List<Player> selection;
+	private List<Player> deselection;
+	private PlayerListModel plm_1;
+	private PlayerListModel plm_2;
 
 	/**
 	 * Launch the application.
@@ -108,6 +115,7 @@ public class NewGameFrame extends JFrame {
 	public NewGameFrame(List<Player> players) {
 		this();
 		this.players = players;
+		this.selection = new ArrayList<Player>();
 		this.ptm = new PropertyDescriptorTableModel(Player.PROPERTY_DESCRIPTORS, new ArrayList<PropertyDescriptable>(this.players));
 		table.setModel(ptm);
 		table.repaint();
@@ -149,25 +157,13 @@ public class NewGameFrame extends JFrame {
 		horizontalBox_1.add(btnDelete);
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println(table.getSelectedRows().length);
 				int[] selected = table.getSelectedRows();
-				List<Integer> list = new ArrayList<Integer>();
-				for (int index : selected) {
-					list.add(index);
-				}
-				Collections.sort(list);
-				Collections.reverse(list);
-				for (int i : list) {
-					ptm.getItems().remove(i);
-				}
-				table.clearSelection();
-				table.repaint();
+				ptm.removeItems(selected);
 			}
 		});
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ptm.getItems().add(new Player(System.currentTimeMillis() + ""));
-				table.repaint();
+				ptm.addItem(new Player(System.currentTimeMillis()+""));
 			}
 		});
 
@@ -181,17 +177,6 @@ public class NewGameFrame extends JFrame {
 		scrollPane.setViewportView(table);
 
 		panel_4 = new JPanel();
-		panel_4.addComponentListener(new ComponentAdapter() {
-			@Override
-			public void componentShown(ComponentEvent arg0) {
-				System.out.println("set models");
-				table_1.setModel(new PropertyDescriptorTableModel(Player.PROPERTY_DESCRIPTORS, new ArrayList<PropertyDescriptable>(players)));
-				table_1.getColumnModel().removeColumn(table_1.getColumnModel().getColumn(0));
-				table_1.getColumnModel().removeColumn(table_1.getColumnModel().getColumn(1));
-				table_1.getColumnModel().removeColumn(table_1.getColumnModel().getColumn(1));
-				table_1.repaint();
-			}
-		});
 		panel.add(panel_4, "name_14997351528952");
 		panel_4.setLayout(new BorderLayout(0, 0));
 
@@ -206,18 +191,33 @@ public class NewGameFrame extends JFrame {
 				lblAllPlayers = new JLabel("All players");
 				verticalBox_2.add(lblAllPlayers);
 				
-				table_1 = new JTable();
-				table_1.setFillsViewportHeight(true);
-				verticalBox_2.add(table_1);
+				scrollPane_1 = new JScrollPane();
+				verticalBox_2.add(scrollPane_1);
+				
+				list_1 = new JList<String>();
+				scrollPane_1.setViewportView(list_1);
+				//list_1.setModel(new PlayerListModel(players));
 
 		verticalBox = Box.createVerticalBox();
 		panel_5.add(verticalBox, BorderLayout.CENTER);
 
 		btnSelect = new JButton(">");
+		btnSelect.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				plm_2.addPlayers(plm_1.grabPlayers(list_1.getSelectedIndices()));
+			}
+		});
+		btnSelect.setAlignmentY(Component.TOP_ALIGNMENT);
 		btnSelect.setToolTipText("Add to selection.");
 		verticalBox.add(btnSelect);
 
 		btnDeselect = new JButton("<");
+		btnDeselect.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				plm_1.addPlayers(plm_2.grabPlayers(list_2.getSelectedIndices()));
+			}
+		});
+		btnDeselect.setAlignmentY(Component.TOP_ALIGNMENT);
 		btnDeselect.setToolTipText("Remove from selection.");
 		verticalBox.add(btnDeselect);
 		
@@ -227,8 +227,12 @@ public class NewGameFrame extends JFrame {
 				lblSelection = new JLabel("Selection");
 				verticalBox_3.add(lblSelection);
 				
-				table_2 = new JTable();
-				verticalBox_3.add(table_2);
+				scrollPane_2 = new JScrollPane();
+				verticalBox_3.add(scrollPane_2);
+				
+				list_2 = new JList<String>();
+				scrollPane_2.setViewportView(list_2);
+				//list_2.setModel(new PlayerListModel(selection));
 
 		panel_6 = new JPanel();
 		FlowLayout flowLayout_1 = (FlowLayout) panel_6.getLayout();
@@ -276,6 +280,14 @@ public class NewGameFrame extends JFrame {
 		btnNext.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				((CardLayout) panel.getLayout()).next(panel);
+				deselection = new ArrayList<Player>(players);
+				plm_1 = new PlayerListModel(deselection);
+				list_1.setModel(plm_1);
+				list_1.repaint();
+				selection = new ArrayList<Player>();
+				plm_2 = new PlayerListModel(selection);
+				list_2.setModel(plm_2);
+				list_2.repaint();
 			}
 		});
 		horizontalBox.add(btnNext);

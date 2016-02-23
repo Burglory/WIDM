@@ -10,31 +10,24 @@ public class Player extends PropertyDescriptable {
 	public static List<PropertyDescriptor> PROPERTY_DESCRIPTORS = new ArrayList<PropertyDescriptor>();
 	
 	static {
-		PROPERTY_DESCRIPTORS.add(new PropertyDescriptor("ID", "Players ID.", String.class, ""));
-		PROPERTY_DESCRIPTORS.add(new PropertyDescriptor("Name", "Players name.", String.class, ""));
-		PROPERTY_DESCRIPTORS.add(new PropertyDescriptor("Email address", "Players email address.", String.class, ""));
-		PROPERTY_DESCRIPTORS.add(new PropertyDescriptor("Mole", "Players mole status.", Boolean.class, ""));
+		PROPERTY_DESCRIPTORS.add(new PropertyDescriptor("id","ID", "Players ID.", String.class, ""));
+		PROPERTY_DESCRIPTORS.add(new PropertyDescriptor("name","Name", "Players name.", String.class, ""));
+		PROPERTY_DESCRIPTORS.add(new PropertyDescriptor("email","Email address", "Players email address.", String.class, ""));
+		PROPERTY_DESCRIPTORS.add(new PropertyDescriptor("mole","Mole", "Players mole status.", Boolean.class, ""));
 	}
 	
 	public Player(String id) {
-		this.setProperty("ID", id);
+		this.setProperty("id", id);
 	}
 
 	@Override
 	public List<PropertyDescriptor> getPropertyDescriptors() {
 		return PROPERTY_DESCRIPTORS;
 	}
-
-	@Override
-	public void addPropertyDescriptor(PropertyDescriptor p) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void removePropertyDescriptor(String name) {
-		// TODO Auto-generated method stub
-		
-	}	
+//	
+//	@Override
+//	public String toString() {
+//		return (String) this.getProperty("Name");
+//	}
 
 }

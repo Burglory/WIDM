@@ -10,10 +10,20 @@ public abstract class PropertyDescriptable {
 	
 	public abstract List<PropertyDescriptor> getPropertyDescriptors();
 	
-	public abstract void addPropertyDescriptor(PropertyDescriptor p);
+	public void addPropertyDescriptor(PropertyDescriptor p) {
+		this.getPropertyDescriptors().add(p);
+	}
 	
-	public abstract void removePropertyDescriptor(String name);
+	public void removePropertyDescriptor(PropertyDescriptor p) {
+		this.getPropertyDescriptors().remove(p);
+	}
 	
+	public PropertyDescriptor getPropertyDescriptor(String name) {
+		for(PropertyDescriptor p : this.getPropertyDescriptors()) {
+			if(p.getPropertyname().equals(name)) return p;
+		}
+		return null;
+	}
 	
 	private boolean containsProperty(String propertyname) {
 		for (PropertyDescriptor p : getPropertyDescriptors()) {
