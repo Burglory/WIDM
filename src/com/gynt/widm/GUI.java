@@ -8,6 +8,7 @@ import com.gynt.widm.core.Player;
 import com.gynt.widm.languages.LanguagePack;
 import com.gynt.widm.languages.LanguagePackIO;
 import com.gynt.widm.resources.icons.ExamEditIcon;
+import com.gynt.widm.resources.icons.ExamResultsIcon;
 import com.gynt.widm.resources.icons.ExamStartIcon;
 import com.gynt.widm.resources.icons.ExecutionEditIcon;
 import com.gynt.widm.resources.icons.ExecutionStartIcon;
@@ -122,30 +123,37 @@ public class GUI {
 		frmWidm.getContentPane().add(toolBar, BorderLayout.NORTH);
 		
 		toolBar.addSeparator();
-		JButton btnStartExam = new JButton("");
-		btnStartExam.setToolTipText("Run the exam for this round.");
-		btnStartExam.setIcon(new ImageIcon(ExamStartIcon.getImage()));
-		btnStartExam.setFocusPainted(false);
-		toolBar.add(btnStartExam);
 		
 		JButton btnEditexam = new JButton("");
 		btnEditexam.setToolTipText("Edit the exam.");
 		btnEditexam.setIcon(new ImageIcon(ExamEditIcon.getImage()));
 		btnEditexam.setFocusPainted(false);
 		toolBar.add(btnEditexam);
-		toolBar.addSeparator();
 		
-		JButton btnStartExecution = new JButton("");
-		btnStartExecution.setToolTipText("Run the execution for this round.");
-		btnStartExecution.setIcon(new ImageIcon(ExecutionStartIcon.getImage()));
-		btnStartExecution.setFocusPainted(false);
-		toolBar.add(btnStartExecution);
+		JButton btnStartExam = new JButton("");
+		btnStartExam.setToolTipText("Run the exam for this round.");
+		btnStartExam.setIcon(new ImageIcon(ExamStartIcon.getImage()));
+		btnStartExam.setFocusPainted(false);
+		toolBar.add(btnStartExam);
+		
+		JButton btnResultsExam = new JButton("");
+		btnResultsExam.setToolTipText("View the results for the exam.");
+		btnResultsExam.setIcon(new ImageIcon(ExamResultsIcon.getImage()));
+		btnResultsExam.setFocusPainted(false);
+		toolBar.add(btnResultsExam);
+		toolBar.addSeparator();
 		
 		JButton btnEditexecution = new JButton("");
 		btnEditexecution.setToolTipText("Edit the execution.");
 		btnEditexecution.setIcon(new ImageIcon(ExecutionEditIcon.getImage()));
 		btnEditexecution.setFocusPainted(false);
 		toolBar.add(btnEditexecution);
+		
+		JButton btnStartExecution = new JButton("");
+		btnStartExecution.setToolTipText("Run the execution for this round.");
+		btnStartExecution.setIcon(new ImageIcon(ExecutionStartIcon.getImage()));
+		btnStartExecution.setFocusPainted(false);
+		toolBar.add(btnStartExecution);
 		
 		JButton btnProgressToNew = new JButton("");
 		btnProgressToNew.setToolTipText("Progress to next round and leave out executed player(s).");

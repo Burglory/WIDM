@@ -11,6 +11,8 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.TableColumn;
+import javax.xml.bind.DatatypeConverter;
 
 import com.gynt.debug.DebugData;
 import com.gynt.widm.core.Player;
@@ -45,6 +47,8 @@ import javax.swing.Box;
 import javax.swing.JList;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.nio.ByteBuffer;
+
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
@@ -100,6 +104,11 @@ public class NewGameFrame extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		try {
+			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -114,10 +123,22 @@ public class NewGameFrame extends JFrame {
 
 	public NewGameFrame(List<Player> players) {
 		this();
+		setPlayers(players);
+	}
+	
+	private void setPlayers(List<Player> players) {
 		this.players = players;
 		this.selection = new ArrayList<Player>();
-		this.ptm = new PropertyDescriptorTableModel(Player.PROPERTY_DESCRIPTORS, new ArrayList<PropertyDescriptable>(this.players));
+		this.ptm = new PropertyDescriptorTableModel(Player.PROPERTY_DESCRIPTORS, this.players);
 		table.setModel(ptm);
+		TableColumn tc = table.getColumn("ID");
+		tc.setMaxWidth(0);
+		tc.setMinWidth(0);
+		tc.setPreferredWidth(0);
+		tc = table.getColumn("Mole");
+		tc.setMaxWidth(0);
+		tc.setMinWidth(0);
+		tc.setPreferredWidth(0);
 		table.repaint();
 	}
 
@@ -163,7 +184,7 @@ public class NewGameFrame extends JFrame {
 		});
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ptm.addItem(new Player(System.currentTimeMillis()+""));
+				ptm.addItem(new Player(generateID()));
 			}
 		});
 
@@ -310,10 +331,13 @@ public class NewGameFrame extends JFrame {
 		horizontalBox.add(btnCancel);
 
 		if (GUI.DebugMode) {
-			this.players = DebugData.playerdebug;
-			this.ptm = new PropertyDescriptorTableModel(Player.PROPERTY_DESCRIPTORS, this.players);
-			table.setModel(ptm);
+			this.setPlayers(DebugData.playerdebug);
 		}
 	}
 
+	String generateID() {
+		return DatatypeConverter.printBase64Binary(ByteBuffer.allocate(8).putLong(System.currentTimeMillis()).array());
+//		return System.currentTimeMillis()+"";
+	}
+	
 }
