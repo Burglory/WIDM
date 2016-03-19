@@ -172,8 +172,8 @@ public class NewGameFrame extends JFrame {
 
 		table = new JTable();
 		table.setFillsViewportHeight(true);
-//		table.setModel(
-//				new PropertyDescriptorTableModel(new ArrayList<PropertyDescriptor>(), new ArrayList<PropertyDescriptable>()));
+		//		table.setModel(
+		//				new PropertyDescriptorTableModel(new ArrayList<PropertyDescriptor>(), new ArrayList<PropertyDescriptable>()));
 		scrollPane.setViewportView(table);
 
 		panel_4 = new JPanel();
@@ -183,69 +183,69 @@ public class NewGameFrame extends JFrame {
 		panel_5 = new JPanel();
 		panel_4.add(panel_5, BorderLayout.CENTER);
 		panel_5.setLayout(new BorderLayout(0, 0));
-				
-				panel_7 = new JPanel();
-				panel_5.add(panel_7, BorderLayout.CENTER);
-												GridBagLayout gbl_panel_7 = new GridBagLayout();
-												gbl_panel_7.columnWidths = new int[] {0};
-												gbl_panel_7.rowHeights = new int[] {35, 35, 30, 30, 30, 30, 30, 30, 0, 0, 35, 35, 35, 35, 35, 35, 35, 35};
-												gbl_panel_7.columnWeights = new double[]{0.0};
-												gbl_panel_7.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-												panel_7.setLayout(gbl_panel_7);
-																		
-																				btnDeselect = new JButton("<");
-																				btnDeselect.addActionListener(new ActionListener() {
-																					public void actionPerformed(ActionEvent e) {
-																						plm_1.addPlayers(plm_2.grabPlayers(list_2.getSelectedIndices()));
-																					}
-																				});
-																				
-																						btnSelect = new JButton(">");
-																						btnSelect.addActionListener(new ActionListener() {
-																							public void actionPerformed(ActionEvent e) {
-																								plm_2.addPlayers(plm_1.grabPlayers(list_1.getSelectedIndices()));
-																							}
-																						});
-																						btnSelect.setToolTipText("Add to selection.");
-																						GridBagConstraints gbc_btnSelect = new GridBagConstraints();
-																						gbc_btnSelect.insets = new Insets(0, 0, 5, 0);
-																						gbc_btnSelect.fill = GridBagConstraints.BOTH;
-																						gbc_btnSelect.gridx = 0;
-																						gbc_btnSelect.gridy = 8;
-																						panel_7.add(btnSelect, gbc_btnSelect);
-																				btnDeselect.setToolTipText("Remove from selection.");
-																				GridBagConstraints gbc_btnDeselect = new GridBagConstraints();
-																				gbc_btnDeselect.fill = GridBagConstraints.BOTH;
-																				gbc_btnDeselect.gridx = 0;
-																				gbc_btnDeselect.gridy = 9;
-																				panel_7.add(btnDeselect, gbc_btnDeselect);
-																				
-																				panel_8 = new JPanel();
-																				panel_5.add(panel_8, BorderLayout.WEST);
-																				panel_8.setLayout(new BorderLayout(0, 0));
-																				
-																				lblAllPlayers = new JLabel("All players");
-																				panel_8.add(lblAllPlayers, BorderLayout.NORTH);
-																				
-																				scrollPane_1 = new JScrollPane();
-																				panel_8.add(scrollPane_1);
-																				
-																				list_1 = new JList<String>();
-																				scrollPane_1.setViewportView(list_1);
-																				
-																				panel_9 = new JPanel();
-																				panel_5.add(panel_9, BorderLayout.EAST);
-																				panel_9.setLayout(new BorderLayout(0, 0));
-																				
-																				lblSelection = new JLabel("Selection");
-																				panel_9.add(lblSelection, BorderLayout.NORTH);
-																				
-																				scrollPane_2 = new JScrollPane();
-																				panel_9.add(scrollPane_2);
-																				
-																				list_2 = new JList<String>();
-																				scrollPane_2.setViewportView(list_2);
-				//list_2.setModel(new PlayerListModel(selection));
+
+		panel_7 = new JPanel();
+		panel_5.add(panel_7, BorderLayout.CENTER);
+		GridBagLayout gbl_panel_7 = new GridBagLayout();
+		gbl_panel_7.columnWidths = new int[] {0};
+		gbl_panel_7.rowHeights = new int[] {35, 35, 30, 30, 30, 30, 30, 30, 0, 0, 35, 35, 35, 35, 35, 35, 35, 35};
+		gbl_panel_7.columnWeights = new double[]{0.0};
+		gbl_panel_7.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		panel_7.setLayout(gbl_panel_7);
+
+		btnDeselect = new JButton("<");
+		btnDeselect.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				plm_1.addPlayers(plm_2.grabPlayers(list_2.getSelectedIndices()));
+			}
+		});
+
+		btnSelect = new JButton(">");
+		btnSelect.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				plm_2.addPlayers(plm_1.grabPlayers(list_1.getSelectedIndices()));
+			}
+		});
+		btnSelect.setToolTipText("Add to selection.");
+		GridBagConstraints gbc_btnSelect = new GridBagConstraints();
+		gbc_btnSelect.insets = new Insets(0, 0, 5, 0);
+		gbc_btnSelect.fill = GridBagConstraints.BOTH;
+		gbc_btnSelect.gridx = 0;
+		gbc_btnSelect.gridy = 8;
+		panel_7.add(btnSelect, gbc_btnSelect);
+		btnDeselect.setToolTipText("Remove from selection.");
+		GridBagConstraints gbc_btnDeselect = new GridBagConstraints();
+		gbc_btnDeselect.fill = GridBagConstraints.BOTH;
+		gbc_btnDeselect.gridx = 0;
+		gbc_btnDeselect.gridy = 9;
+		panel_7.add(btnDeselect, gbc_btnDeselect);
+
+		panel_8 = new JPanel();
+		panel_5.add(panel_8, BorderLayout.WEST);
+		panel_8.setLayout(new BorderLayout(0, 0));
+
+		lblAllPlayers = new JLabel("All players");
+		panel_8.add(lblAllPlayers, BorderLayout.NORTH);
+
+		scrollPane_1 = new JScrollPane();
+		panel_8.add(scrollPane_1);
+
+		list_1 = new JList<String>();
+		scrollPane_1.setViewportView(list_1);
+
+		panel_9 = new JPanel();
+		panel_5.add(panel_9, BorderLayout.EAST);
+		panel_9.setLayout(new BorderLayout(0, 0));
+
+		lblSelection = new JLabel("Selection");
+		panel_9.add(lblSelection, BorderLayout.NORTH);
+
+		scrollPane_2 = new JScrollPane();
+		panel_9.add(scrollPane_2);
+
+		list_2 = new JList<String>();
+		scrollPane_2.setViewportView(list_2);
+		//list_2.setModel(new PlayerListModel(selection));
 
 		panel_6 = new JPanel();
 		FlowLayout flowLayout_1 = (FlowLayout) panel_6.getLayout();
