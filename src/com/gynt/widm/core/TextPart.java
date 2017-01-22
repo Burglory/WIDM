@@ -5,6 +5,7 @@ import org.json.JSONObject;
 public class TextPart extends ExamPart {
 
 	public String text;
+	public long milidelay;
 
 	@Override
 	public JSONObject serialize() {
