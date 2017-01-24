@@ -19,17 +19,12 @@ public class Game implements JSerializable {
 	public ArrayList<Round> rounds = new ArrayList<>();
 	public GameFileContext fileinterface;
 
-	public void save() throws IOException, URISyntaxException {
-		fileinterface.save(serialize().toString().getBytes(Charset.forName("UTF-8")), fileinterface.getRoot().resolve("gamefile.json"));
+	public void save() throws IOException {
+		fileinterface.store(serialize().toString().getBytes(Charset.forName("UTF-8")), "gamefile.json");
 	}
 
-	public void setFile(File file) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, IOException, URISyntaxException {
-		fileinterface=GameFileContext.newInterface(file);
-	}
-
-	public void load(File file) throws IOException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, URISyntaxException {
-		fileinterface=GameFileContext.newInterface(file);
-		deserialize(new JSONObject(new String(fileinterface.load(fileinterface.getRoot().resolve("gamefile.json")), Charset.forName("UTF-8"))));
+	public void load() {
+		deserialize(new JSONObject(new String(fileinterface.retrieve("gamefile.json"), Charset.forName("UTF-8"))));
 	}
 
 	@Override

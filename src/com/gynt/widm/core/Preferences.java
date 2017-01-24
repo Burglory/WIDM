@@ -1,17 +1,36 @@
 package com.gynt.widm.core;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map.Entry;
+
 import java.util.Properties;
 
 public class Preferences {
 
-	private static Game game;
-	private static Properties map;
+	public static Game game;
+	private static Properties map = new Properties();
+
+	public static Boolean getBoolean(String key) {
+		try {
+			return Boolean.parseBoolean(map.getProperty(key));
+		} catch(Exception e) {
+			return null;
+		}
+	}
+
+	public static Integer getInteger(String key) {
+		try {
+			return Integer.parseInt(map.getProperty(key));
+		} catch(Exception e) {
+			return null;
+		}
+	}
 
 	public static String get(String key) {
 		return map.getProperty(key);
@@ -44,17 +63,15 @@ public class Preferences {
 //	}
 
 	public static void save() throws IOException {
-		map.store(Files.newBufferedWriter(game.fileinterface.getRoot().resolve("preferences.properties")), "");
-		//game.fileinterface.save(serialize().getBytes(Charset.forName("UTF-8")), game.fileinterface.getRoot().resolve("preferences"));
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		map.store(bos, "");
+		game.fileinterface.store(bos.toByteArray(), "preferences.properties");
 	}
 
-	public static void load(Game g) throws IOException {
-		game=g;
+	public static void load() throws IOException {
 		map = new Properties();
-		map.load(Files.newBufferedReader(game.fileinterface.getRoot().resolve("preferences.properties")));
-//		String data = new String(g.fileinterface.load(g.fileinterface.getRoot().resolve("preferences")), Charset.forName("UTF-8"));
-//		deserialize(data);
-
+		ByteArrayInputStream bis = new ByteArrayInputStream(game.fileinterface.retrieve("preferences.properties"));
+		map.load(bis);
 	}
 
 	public static boolean loaded() {

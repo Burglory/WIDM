@@ -17,10 +17,13 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.gynt.widm.core.Game;
+import com.gynt.widm.core.Preferences;
 import com.gynt.widm.core.Round;
 import com.gynt.widm.core.util.ExceptionDisplay;
+import com.gynt.widm.io.GameFileContext;
 import com.gynt.widm.resources.RBLoader;
 import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
@@ -30,6 +33,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
+import java.util.zip.ZipException;
 import java.awt.event.InputEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -94,58 +98,51 @@ public class MainWindow extends JFrame {
 		});
 	}
 
-	private void loadGame() {
-
+	private void loadGame() throws ZipException, IOException {
+		JFileChooser jfc = new JFileChooser();
+		jfc.setFileFilter(new FileNameExtensionFilter("WIDM save file", ".widm"));
+		int result = jfc.showOpenDialog(this);
+		if (result==JFileChooser.APPROVE_OPTION && jfc.getSelectedFile() != null) {
+			if(game==null) game=new Game();
+			if(jfc.getSelectedFile().getPath().endsWith(".widm")) {
+				game.fileinterface=new GameFileContext(jfc.getSelectedFile());
+			} else {
+				game.fileinterface=new GameFileContext(new File(jfc.getSelectedFile().getPath()+".widm"));
+			}
+			game.load();
+			Preferences.game=game;
+			Preferences.load();
+		}
 	}
 
-	private void saveGameAs() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, IOException, URISyntaxException {
+	private void saveGameAs() throws ZipException, IOException {
 		JFileChooser jfc = new JFileChooser();
-		jfc.showSaveDialog(this);
-		jfc.setFileFilter(new FileFilter() {
+		jfc.setSelectedFile(new File("newgame.widm"));
+		jfc.setFileFilter(new FileNameExtensionFilter("WIDM save file", ".widm"));
+		int result = jfc.showSaveDialog(this);
 
-			@Override
-			public String getDescription() {
-				return "Game file";
+		if (result==JFileChooser.APPROVE_OPTION && jfc.getSelectedFile() != null) {
+			if(jfc.getSelectedFile().getPath().endsWith(".widm")) {
+				game.fileinterface=new GameFileContext(jfc.getSelectedFile());
+			} else {
+				game.fileinterface=new GameFileContext(new File(jfc.getSelectedFile().getPath()+".widm"));
 			}
-
-			@Override
-			public boolean accept(File f) {
-				return true;
-			}
-		});;
-		if (jfc.getSelectedFile() != null) {
-			game.setFile(jfc.getSelectedFile());
 			saveGame();
 		}
 	}
 
-	private void saveGame() throws IOException, URISyntaxException {
+	private void saveGame() throws IOException {
 		if(game==null) return;
 		if(game.fileinterface!=null) {
 			game.save();
+			Preferences.game=game;
+			Preferences.save();
 
+			game.fileinterface.save();
 		} else {
-			try {
+
 				saveGameAs();
-			} catch (NoSuchMethodException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (URISyntaxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
 		}
 	}
 
@@ -168,9 +165,6 @@ public class MainWindow extends JFrame {
 							MainWindow.this.dispose();
 						} catch (IOException e1) {
 							ExceptionDisplay.raiseNewExceptionDisplay(e1, "Saving the file failed.");
-						} catch (URISyntaxException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
 						}
 					} else if (result == JOptionPane.NO_OPTION) {
 						MainWindow.this.dispose();
@@ -209,9 +203,6 @@ public class MainWindow extends JFrame {
 				try {
 					saveGame();
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (URISyntaxException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
@@ -267,20 +258,9 @@ public class MainWindow extends JFrame {
 	}
 
 	private void loadGame(Game g) {
-		tabbedPane.removeAll();
 		game=g;
-		if(g.rounds.size()==0) {
-			g.rounds.add(new Round());
-			RoundScreen round1Panel = new RoundScreen(g.rounds.get(0));
-			tabbedPane.addTab("Round 1", null, round1Panel, null);
-		} else {
-			for(int i = 0; i < g.rounds.size(); i++) {
-				tabbedPane.addTab("Round "+(i+1), null, new RoundScreen(g.rounds.get(i)), null);
-			}
-		}
-
-		PreferencesScreen preferencesPanel = new PreferencesScreen();
-		tabbedPane.addTab("Preferences", null, preferencesPanel, null);
+		contentPane.removeAll();
+		contentPane.add(new GamePanel(g), BorderLayout.CENTER);
 	}
 
 	public static void main(String[] args) {

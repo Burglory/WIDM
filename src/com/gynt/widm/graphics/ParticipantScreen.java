@@ -34,8 +34,13 @@ import java.awt.event.ActionEvent;
 
 public class ParticipantScreen extends JPanel {
 
+
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 8032171346542801207L;
+	private JTable table;
 	private char passwordchar = '\u25CF';
-	private JPopupMenu popupMenu;
 	private Round round;
 
 	public ParticipantScreen() {
@@ -79,11 +84,11 @@ public class ParticipantScreen extends JPanel {
 		JButton btnView = new JButton("View");
 		toolBar.add(btnView);
 
-		popupMenu = new JPopupMenu();
-		addPopup(btnView, popupMenu);
-
 		JButton btnChooseAMole = new JButton("Choose a Mole");
 		toolBar.add(btnChooseAMole);
+
+		JComboBox comboBox = new JComboBox();
+		toolBar.add(comboBox);
 
 		JScrollPane scrollPane = new JScrollPane();
 		add(scrollPane, BorderLayout.CENTER);
@@ -149,7 +154,6 @@ public class ParticipantScreen extends JPanel {
 	private void setupPreferences() {
 		if (Preferences.loaded()) {
 			Enumeration<TableColumn> t = table.getColumnModel().getColumns();
-			popupMenu.removeAll();
 			while (t.hasMoreElements()) {
 				TableColumn c = t.nextElement();
 				String name = (String) c.getHeaderValue();
@@ -173,35 +177,9 @@ public class ParticipantScreen extends JPanel {
 				}
 				int index = Integer.parseInt(Preferences.get(settingsbase + ".index"));
 				table.getColumnModel().moveColumn(table.getColumnModel().getColumnIndex(name), index);
-				popupMenu.add(new JCheckBoxMenuItem(name, result));
 			}
 
 		}
 	}
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 8032171346542801207L;
-	private JTable table;
-
-	private static void addPopup(Component component, final JPopupMenu popup) {
-		component.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					showMenu(e);
-				}
-			}
-
-			public void mouseReleased(MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					showMenu(e);
-				}
-			}
-
-			private void showMenu(MouseEvent e) {
-				popup.show(e.getComponent(), e.getX(), e.getY());
-			}
-		});
-	}
 }

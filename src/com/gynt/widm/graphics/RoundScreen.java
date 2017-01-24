@@ -43,13 +43,13 @@ public class RoundScreen extends JPanel {
 		ParticipantScreen panel = new ParticipantScreen(round);
 		tabbedPane.addTab("Participants", null, panel, null);
 
-		JPanel panel_1 = new JPanel();
+		JPanel panel_1 = new ExamScreen();
 		tabbedPane.addTab("Exam", null, panel_1 , null);
 
-		JPanel panel_3 = new JPanel();
+		JPanel panel_3 = new ResultsScreen();
 		tabbedPane.addTab("Results", null, panel_3, null);
 
-		JPanel panel_2 = new JPanel();
+		JPanel panel_2 = new ExecutionScreen();
 		tabbedPane.addTab("Execution", null, panel_2, null);
 	}
 
