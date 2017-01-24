@@ -2,12 +2,18 @@ package com.gynt.widm.core;
 
 import org.json.JSONObject;
 
+import com.gynt.widm.core.util.Serialization;
+
 public class EntryPart extends QuestionPart {
 
 	@Override
 	public JSONObject serialize() {
-		// TODO Auto-generated method stub
-		return null;
+		return Serialization.forObject(this, super.serialize());
+	}
+
+	@Override
+	public JSerializable deserialize(JSONObject j) {
+		return this;
 	}
 
 }

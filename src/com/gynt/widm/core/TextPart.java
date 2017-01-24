@@ -2,6 +2,8 @@ package com.gynt.widm.core;
 
 import org.json.JSONObject;
 
+import com.gynt.widm.core.util.Serialization;
+
 public class TextPart extends ExamPart {
 
 	public String text;
@@ -9,8 +11,14 @@ public class TextPart extends ExamPart {
 
 	@Override
 	public JSONObject serialize() {
-		// TODO Auto-generated method stub
-		return null;
+		return Serialization.newJSON(this).put("text", text).put("delay", milidelay);
+	}
+
+	@Override
+	public JSerializable deserialize(JSONObject j) {
+		text=j.getString("text");
+		milidelay=j.getLong("delay");
+		return this;
 	}
 
 }
