@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.gynt.widm.core.util.Serialization;
+import com.gynt.widm.io.Serialization;
 
 public class Exam implements JSerializable {
 

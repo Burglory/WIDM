@@ -1,18 +1,30 @@
-package com.gynt.widm.core.util;
+package com.gynt.widm.io;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLClassLoader;
+
+import javax.swing.JOptionPane;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.gynt.widm.core.JSerializable;
+import com.gynt.widm.core.util.ExceptionDisplay;
 
 public class Serialization {
 
 	public static <T> JSONObject newJSON(T t) {
-		return new JSONObject().put("type", t.getClass().getName());
+		return new JSONObject().put("type", t.getClass().getSimpleName());
 	}
 
 	public static <T> JSONObject forObject(T t, JSONObject j) {
-		return j.put("type", t.getClass().getName());
+		return j.put("type", t.getClass().getSimpleName());
 	}
 
 	public static Object newObject(JSONObject j) {
@@ -40,4 +52,17 @@ public class Serialization {
 		return null;
 	}
 
+	public static ClassLoader LOADER = null;
+
+	static {
+		try {
+			LOADER = new URLClassLoader(new URL[]{ClassLoader.getSystemClassLoader().getResource(".").toURI().toURL()});
+		} catch (MalformedURLException e) {
+			ExceptionDisplay.raiseNewExceptionDisplay(e, "Loading of the file loader failed.");
+			System.exit(1);
+		} catch (URISyntaxException e) {
+			ExceptionDisplay.raiseNewExceptionDisplay(e, "Loading of the file loader failed.");
+			System.exit(1);
+		}
+	}
 }

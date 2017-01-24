@@ -37,9 +37,26 @@ public class GameFileContext {
 		file = f2;
 	}
 
-	public void renew() throws IOException, URISyntaxException {
+	public void reload() throws URISyntaxException, IOException {
 		URI n = new URI("jar:" + file.toURI());
-		filesystem = (ZipFileSystem) FileSystems.newFileSystem(n, null);
+		if(file.exists()) {
+			filesystem = (ZipFileSystem) FileSystems.getFileSystem(n);
+		} else {
+			filesystem = (ZipFileSystem) FileSystems.newFileSystem(n, null);
+		}
+	}
+
+	public void storeAndReload() throws IOException, URISyntaxException {
+		if(filesystem!=null) {
+			if(filesystem.isOpen()) {
+				filesystem.close();
+			}
+		}
+		URI n = new URI("jar:" + file.toURI());
+		System.out.println(n.toString());
+		Map<String, String> env = new HashMap<String, String>();
+		env.put("create", "true");
+		filesystem = (ZipFileSystem) FileSystems.newFileSystem(n, env);
 	}
 
 	public static GameFileContext newInterface(File file) throws IOException, URISyntaxException, NoSuchMethodException,
@@ -65,27 +82,33 @@ public class GameFileContext {
 		return root;
 	}
 
-	public void save(File file, Path p) throws IOException {
+	public void save(File file, Path p) throws IOException, URISyntaxException {
+		if(!filesystem.isOpen()) reload();
 		Files.copy(file.toPath(), p, StandardCopyOption.REPLACE_EXISTING);
+		storeAndReload();
 	}
 
-	public void save(byte[] data, String filename) throws IOException {
+	public void save(byte[] data, String filename) throws IOException, URISyntaxException {
 		save(data, root.resolve(filename));
 	}
 
-	public void save(byte[] data, Path p) throws IOException {
+	public void save(byte[] data, Path p) throws IOException, URISyntaxException {
+		if(!filesystem.isOpen()) reload();
 		if (Files.exists(p, LinkOption.NOFOLLOW_LINKS)) {
 			Files.copy(new ByteArrayInputStream(data), p, StandardCopyOption.REPLACE_EXISTING);
 		} else {
 			Files.write(p, data);
 		}
+		storeAndReload();
 	}
 
-	public byte[] load(String filename) throws IOException {
+	public byte[] load(String filename) throws IOException, URISyntaxException {
+		if(!filesystem.isOpen()) reload();
 		return load(root.resolve(filename));
 	}
 
-	public byte[] load(Path p) throws IOException {
+	public byte[] load(Path p) throws IOException, URISyntaxException {
+		if(!filesystem.isOpen()) reload();
 		return Files.readAllBytes(p);
 	}
 

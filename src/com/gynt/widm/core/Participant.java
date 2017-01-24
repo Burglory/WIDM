@@ -1,13 +1,15 @@
 package com.gynt.widm.core;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.json.JSONObject;
+import org.json.JSONString;
 
 import com.gynt.widm.core.util.IDProvider;
-import com.gynt.widm.core.util.Serialization;
+import com.gynt.widm.io.Serialization;
 
-public class Participant {
+public class Participant implements JSerializable {
 
 	public static enum Type {
 		MOLE(0x1), PLAYER(0x2);
@@ -17,13 +19,18 @@ public class Participant {
 		private Type(int val) {
 			value = val;
 		}
+
+		public static Type lookUp(int i) {
+			for(Type t : Type.values()) if(t.value==i) return t;
+			return null;
+		}
 	}
 
-	public final String id;
+	public String id;
 	public Type type;
 	public String name;
 	public String password;
-	public HashMap<String, String> details;
+	public Map<String, Object> details;
 
 	private Participant(Type t, String i) {
 		type = t;
@@ -47,6 +54,16 @@ public class Participant {
 		JSONObject jdetails = new JSONObject(details);
 		result.put("details", jdetails);
 		return result;
+	}
+
+	@Override
+	public JSerializable deserialize(JSONObject j) {
+		id=j.getString("id");
+		type=Type.lookUp(j.getInt("ptype"));
+		name=j.getString("name");
+		password=j.getString("password");
+		details = j.getJSONObject("details").toMap();
+		return this;
 	}
 
 }

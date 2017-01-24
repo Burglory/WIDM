@@ -2,7 +2,7 @@ package com.gynt.widm.core;
 
 import org.json.JSONObject;
 
-import com.gynt.widm.core.util.Serialization;
+import com.gynt.widm.io.Serialization;
 
 public class EntryPart extends QuestionPart {
 
