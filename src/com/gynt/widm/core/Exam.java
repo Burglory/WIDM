@@ -26,7 +26,7 @@ public class Exam implements JSerializable {
 
 	@Override
 	public Exam deserialize(JSONObject j) {
-		for(Object e : j.getJSONArray("parts")) {
+		for (Object e : j.getJSONArray("parts")) {
 			parts.add((ExamPart) ((JSerializable) Serialization.newObject((JSONObject) e)).deserialize((JSONObject) e));
 		}
 		name = j.getString("name");

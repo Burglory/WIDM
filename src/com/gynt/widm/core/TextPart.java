@@ -16,8 +16,8 @@ public class TextPart extends ExamPart {
 
 	@Override
 	public JSerializable deserialize(JSONObject j) {
-		text=j.getString("text");
-		milidelay=j.getLong("delay");
+		text = j.getString("text");
+		milidelay = j.getLong("delay");
 		return this;
 	}
 

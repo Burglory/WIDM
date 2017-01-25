@@ -24,10 +24,10 @@ public class ChoicePart extends QuestionPart {
 
 		@Override
 		public JSerializable deserialize(JSONObject j) {
-			for(Object o : j.getJSONArray("participants")) {
+			for (Object o : j.getJSONArray("participants")) {
 				participants.add((Participant) Serialization.newObject((JSONObject) o));
 			}
-			text=j.getString("text");
+			text = j.getString("text");
 			return null;
 		}
 	}
@@ -45,7 +45,7 @@ public class ChoicePart extends QuestionPart {
 
 	@Override
 	public ChoicePart deserialize(JSONObject j) {
-		for(Object o : j.getJSONArray("choices")) {
+		for (Object o : j.getJSONArray("choices")) {
 			choices.add((Choice) new Choice().deserialize((JSONObject) o));
 		}
 		return this;

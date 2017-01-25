@@ -3,23 +3,17 @@ package com.gynt.widm.core;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.util.HashMap;
-import java.util.Map.Entry;
-
 import java.util.Properties;
 
 public class Preferences {
 
 	public static Game game;
-	private static Properties map = new Properties();
+	public static Properties map = new Properties();
 
 	public static Boolean getBoolean(String key) {
 		try {
 			return Boolean.parseBoolean(map.getProperty(key));
-		} catch(Exception e) {
+		} catch (Exception e) {
 			return null;
 		}
 	}
@@ -27,7 +21,7 @@ public class Preferences {
 	public static Integer getInteger(String key) {
 		try {
 			return Integer.parseInt(map.getProperty(key));
-		} catch(Exception e) {
+		} catch (Exception e) {
 			return null;
 		}
 	}
@@ -44,23 +38,23 @@ public class Preferences {
 		map.setProperty(key, value);
 	}
 
-//	private static String serialize() {
-//		String result = "";
-//		for(Entry<String, String> entry : map.entrySet()) {
-//			result+=entry.getKey()+"="+entry.getValue()+"\n";
-//		}
-//		return result;
-//	}
-//
-//	private static void deserialize(String data) {
-//		map= new HashMap<String, String>();
-//		for(String line : data.split("(\n|\r)+")) {
-//			if(line.isEmpty()) continue;
-//			String[] split = line.split(" *= *");
-//			if(split.length!=2 || split[0].isEmpty() || split[1].isEmpty()) continue;
-//			map.put(split[0], split[1]);
-//		}
-//	}
+	// private static String serialize() {
+	// String result = "";
+	// for(Entry<String, String> entry : map.entrySet()) {
+	// result+=entry.getKey()+"="+entry.getValue()+"\n";
+	// }
+	// return result;
+	// }
+	//
+	// private static void deserialize(String data) {
+	// map= new HashMap<String, String>();
+	// for(String line : data.split("(\n|\r)+")) {
+	// if(line.isEmpty()) continue;
+	// String[] split = line.split(" *= *");
+	// if(split.length!=2 || split[0].isEmpty() || split[1].isEmpty()) continue;
+	// map.put(split[0], split[1]);
+	// }
+	// }
 
 	public static void save() throws IOException {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -70,12 +64,15 @@ public class Preferences {
 
 	public static void load() throws IOException {
 		map = new Properties();
-		ByteArrayInputStream bis = new ByteArrayInputStream(game.fileinterface.retrieve("preferences.properties"));
-		map.load(bis);
+		if (game.fileinterface != null) {
+			ByteArrayInputStream bis = new ByteArrayInputStream(game.fileinterface.retrieve("preferences.properties"));
+			map.load(bis);
+		}
+
 	}
 
 	public static boolean loaded() {
-		return game!=null && map!=null;
+		return game != null && map != null;
 	}
 
 }

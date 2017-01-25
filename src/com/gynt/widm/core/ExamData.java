@@ -17,7 +17,7 @@ public class ExamData implements JSerializable {
 		JSONObject result = Serialization.newJSON(this);
 		result.put("taker", taker.serialize());
 		JSONArray janswers = new JSONArray();
-		for(ExamAnswer e : answers) {
+		for (ExamAnswer e : answers) {
 			janswers.put(e.serialize());
 		}
 		result.put("answers", janswers);
@@ -27,7 +27,7 @@ public class ExamData implements JSerializable {
 	@Override
 	public JSerializable deserialize(JSONObject j) {
 		taker = (Participant) Serialization.newObject(j.getJSONObject("taker"));
-		for(Object o : j.getJSONArray("answers")) {
+		for (Object o : j.getJSONArray("answers")) {
 			answers.add(new ExamAnswer().deserialize((JSONObject) o));
 		}
 		return this;

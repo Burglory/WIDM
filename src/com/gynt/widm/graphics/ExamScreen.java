@@ -1,20 +1,19 @@
 package com.gynt.widm.graphics;
 
-import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-import javax.swing.JToolBar;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JComboBox;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTree;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.ListSelectionModel;
 import javax.swing.JSplitPane;
+import javax.swing.JTable;
+import javax.swing.JToolBar;
+import javax.swing.JTree;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableModel;
 
 public class ExamScreen extends JPanel {
 	public ExamScreen() {
@@ -40,6 +39,12 @@ public class ExamScreen extends JPanel {
 
 		JButton btnExport = new JButton("Export...");
 		toolBar.add(btnExport);
+
+		JButton btnTry = new JButton("Try...");
+		toolBar.add(btnTry);
+
+		JButton btnRun = new JButton("Run...");
+		toolBar.add(btnRun);
 
 		JPanel panel = new JPanel();
 		add(panel, BorderLayout.CENTER);

@@ -1,15 +1,9 @@
 package com.gynt.widm.io;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
-
-import javax.swing.JOptionPane;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,11 +22,13 @@ public class Serialization {
 	}
 
 	public static Object newObject(JSONObject j) {
-		if(!j.has("type")) throw new RuntimeException();
+		if (!j.has("type"))
+			throw new RuntimeException();
 		Object result;
 		try {
-			result = Serialization.class.getClassLoader().loadClass("com.gynt.widm.core."+j.getString("type")).newInstance();
-			if(result instanceof JSerializable) {
+			result = Serialization.class.getClassLoader().loadClass("com.gynt.widm.core." + j.getString("type"))
+					.newInstance();
+			if (result instanceof JSerializable) {
 				((JSerializable) result).deserialize(j);
 			}
 			return result;
@@ -56,7 +52,8 @@ public class Serialization {
 
 	static {
 		try {
-			LOADER = new URLClassLoader(new URL[]{ClassLoader.getSystemClassLoader().getResource(".").toURI().toURL()});
+			LOADER = new URLClassLoader(
+					new URL[] { ClassLoader.getSystemClassLoader().getResource(".").toURI().toURL() });
 		} catch (MalformedURLException e) {
 			ExceptionDisplay.raiseNewExceptionDisplay(e, "Loading of the file loader failed.");
 			System.exit(1);

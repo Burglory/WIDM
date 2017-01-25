@@ -1,11 +1,7 @@
 package com.gynt.widm.core;
 
-import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URISyntaxException;
 import java.nio.charset.Charset;
-import java.nio.file.Path;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -31,7 +27,7 @@ public class Game implements JSerializable {
 	public JSONObject serialize() {
 		JSONObject result = Serialization.newJSON(this);
 		JSONArray jrounds = new JSONArray();
-		for(Round r : rounds) {
+		for (Round r : rounds) {
 			jrounds.put(r.serialize());
 		}
 		result.put("rounds", jrounds);
@@ -40,7 +36,7 @@ public class Game implements JSerializable {
 
 	@Override
 	public JSerializable deserialize(JSONObject j) {
-		for(Object o : j.getJSONArray("rounds")) {
+		for (Object o : j.getJSONArray("rounds")) {
 			rounds.add((Round) new Round().deserialize((JSONObject) o));
 		}
 		return null;

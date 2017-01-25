@@ -2,6 +2,15 @@ package com.gynt.widm.graphics;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.zip.ZipException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -12,31 +21,18 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
+import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.gynt.widm.core.Game;
 import com.gynt.widm.core.Preferences;
-import com.gynt.widm.core.Round;
 import com.gynt.widm.core.util.ExceptionDisplay;
 import com.gynt.widm.io.GameFileContext;
 import com.gynt.widm.resources.RBLoader;
-import javax.swing.KeyStroke;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URISyntaxException;
-import java.util.zip.ZipException;
-import java.awt.event.InputEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class MainWindow extends JFrame {
 
@@ -54,18 +50,19 @@ public class MainWindow extends JFrame {
 	}
 
 	private static void setLookAndFeel() {
-//		for (LookAndFeelInfo lafi : UIManager.getInstalledLookAndFeels()) {
-//			if (lafi.getName().equals("Windows")) {
-//				try {
-//					UIManager.setLookAndFeel(lafi.getClassName());
-//					return;
-//				} catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException
-//						| IllegalAccessException e) {
-//					e.printStackTrace();
-//				}
-//
-//			}
-//		}
+		// for (LookAndFeelInfo lafi : UIManager.getInstalledLookAndFeels()) {
+		// if (lafi.getName().equals("Windows")) {
+		// try {
+		// UIManager.setLookAndFeel(lafi.getClassName());
+		// return;
+		// } catch (UnsupportedLookAndFeelException | ClassNotFoundException |
+		// InstantiationException
+		// | IllegalAccessException e) {
+		// e.printStackTrace();
+		// }
+		//
+		// }
+		// }
 		for (LookAndFeelInfo lafi : UIManager.getInstalledLookAndFeels()) {
 			if (lafi.getName().equals("Nimbus")) {
 				try {
@@ -102,15 +99,16 @@ public class MainWindow extends JFrame {
 		JFileChooser jfc = new JFileChooser();
 		jfc.setFileFilter(new FileNameExtensionFilter("WIDM save file", ".widm"));
 		int result = jfc.showOpenDialog(this);
-		if (result==JFileChooser.APPROVE_OPTION && jfc.getSelectedFile() != null) {
-			if(game==null) game=new Game();
-			if(jfc.getSelectedFile().getPath().endsWith(".widm")) {
-				game.fileinterface=new GameFileContext(jfc.getSelectedFile());
+		if (result == JFileChooser.APPROVE_OPTION && jfc.getSelectedFile() != null) {
+			if (game == null)
+				game = new Game();
+			if (jfc.getSelectedFile().getPath().endsWith(".widm")) {
+				game.fileinterface = new GameFileContext(jfc.getSelectedFile());
 			} else {
-				game.fileinterface=new GameFileContext(new File(jfc.getSelectedFile().getPath()+".widm"));
+				game.fileinterface = new GameFileContext(new File(jfc.getSelectedFile().getPath() + ".widm"));
 			}
 			game.load();
-			Preferences.game=game;
+			Preferences.game = game;
 			Preferences.load();
 		}
 	}
@@ -121,27 +119,28 @@ public class MainWindow extends JFrame {
 		jfc.setFileFilter(new FileNameExtensionFilter("WIDM save file", ".widm"));
 		int result = jfc.showSaveDialog(this);
 
-		if (result==JFileChooser.APPROVE_OPTION && jfc.getSelectedFile() != null) {
-			if(jfc.getSelectedFile().getPath().endsWith(".widm")) {
-				game.fileinterface=new GameFileContext(jfc.getSelectedFile());
+		if (result == JFileChooser.APPROVE_OPTION && jfc.getSelectedFile() != null) {
+			if (jfc.getSelectedFile().getPath().endsWith(".widm")) {
+				game.fileinterface = new GameFileContext(jfc.getSelectedFile());
 			} else {
-				game.fileinterface=new GameFileContext(new File(jfc.getSelectedFile().getPath()+".widm"));
+				game.fileinterface = new GameFileContext(new File(jfc.getSelectedFile().getPath() + ".widm"));
 			}
 			saveGame();
 		}
 	}
 
 	private void saveGame() throws IOException {
-		if(game==null) return;
-		if(game.fileinterface!=null) {
+		if (game == null)
+			return;
+		if (game.fileinterface != null) {
 			game.save();
-			Preferences.game=game;
+			Preferences.game = game;
 			Preferences.save();
 
 			game.fileinterface.save();
 		} else {
 
-				saveGameAs();
+			saveGameAs();
 
 		}
 	}
@@ -155,7 +154,7 @@ public class MainWindow extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				if(game!=null) {
+				if (game != null) {
 					int result = JOptionPane.showConfirmDialog(MainWindow.this, "Do you want to save the game?");
 					if (result == JOptionPane.CANCEL_OPTION) {
 						return;
@@ -249,26 +248,34 @@ public class MainWindow extends JFrame {
 		tabbedPane.addTab("Welcome", null, welcomePanel, null);
 		welcomePanel.setLayout(new BorderLayout(0, 0));
 
-//		RoundScreen round1Panel = new RoundScreen();
-//		tabbedPane.addTab("Round 1", null, round1Panel, null);
-//
-//		PreferencesScreen preferencesPanel = new PreferencesScreen();
-//		tabbedPane.addTab("Preferences", null, preferencesPanel, null);
+		// RoundScreen round1Panel = new RoundScreen();
+		// tabbedPane.addTab("Round 1", null, round1Panel, null);
+		//
+		// PreferencesScreen preferencesPanel = new PreferencesScreen();
+		// tabbedPane.addTab("Preferences", null, preferencesPanel, null);
 
 	}
 
 	private void loadGame(Game g) {
-		game=g;
+		game = g;
+		Preferences.game = g;
+		try {
+			Preferences.load();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		contentPane.removeAll();
 		contentPane.add(new GamePanel(g), BorderLayout.CENTER);
 	}
 
 	public static void main(String[] args) {
-		//Debug
+		// Debug
 		MainWindow.setup();
 		MainWindow a = new MainWindow();
-//		a.tabbedPane.remove(1);
-//		a.tabbedPane.insertTab("Round 1", null, new RoundScreen(new Round()), null, 1);
+		// a.tabbedPane.remove(1);
+		// a.tabbedPane.insertTab("Round 1", null, new RoundScreen(new Round()),
+		// null, 1);
 		a.setVisible(true);
 	}
 

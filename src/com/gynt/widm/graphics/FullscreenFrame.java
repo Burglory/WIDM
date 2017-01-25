@@ -19,27 +19,27 @@ public class FullscreenFrame extends JFrame {
 	@Override
 	public void setVisible(boolean state) {
 		super.setVisible(state);
-		if(state) {
+		if (state) {
 
-			 GraphicsDevice device = this.getGraphicsConfiguration().getDevice();
-			 device.setFullScreenWindow(this);
-//			this.addFocusListener(new FocusListener() {
-//
-//				@Override
-//				public void focusLost(FocusEvent e) {
-//					setAlwaysOnTop(false);;
-//				}
-//
-//				@Override
-//				public void focusGained(FocusEvent e) {
-//					setAlwaysOnTop(true);;
-//				}
-//			});
+			GraphicsDevice device = this.getGraphicsConfiguration().getDevice();
+			device.setFullScreenWindow(this);
+			// this.addFocusListener(new FocusListener() {
+			//
+			// @Override
+			// public void focusLost(FocusEvent e) {
+			// setAlwaysOnTop(false);;
+			// }
+			//
+			// @Override
+			// public void focusGained(FocusEvent e) {
+			// setAlwaysOnTop(true);;
+			// }
+			// });
 		}
 	}
 
 	public static void main(String[] args) {
-		//Debug
+		// Debug
 		JFrame a = new FullscreenFrame();
 		a.setVisible(true);
 	}

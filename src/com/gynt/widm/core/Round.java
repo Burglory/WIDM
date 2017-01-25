@@ -13,7 +13,6 @@ public class Round implements JSerializable {
 
 	public static class RoundTableModel extends AbstractTableModel {
 
-
 		/**
 		 *
 		 */
@@ -25,7 +24,7 @@ public class Round implements JSerializable {
 		private Round round;
 
 		public RoundTableModel(Round r) {
-			round=r;
+			round = r;
 		}
 
 		@Override
@@ -90,7 +89,7 @@ public class Round implements JSerializable {
 
 		public void addRow(Participant newPlayer) {
 			round.participants.add(newPlayer);
-			fireTableRowsInserted(round.participants.size()-1, round.participants.size()-1);
+			fireTableRowsInserted(round.participants.size() - 1, round.participants.size() - 1);
 		}
 
 		public void deleteRow(Participant newPlayer) {

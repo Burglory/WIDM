@@ -1,10 +1,8 @@
 package com.gynt.widm.core;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.json.JSONObject;
-import org.json.JSONString;
 
 import com.gynt.widm.core.util.IDProvider;
 import com.gynt.widm.io.Serialization;
@@ -21,7 +19,9 @@ public class Participant implements JSerializable {
 		}
 
 		public static Type lookUp(int i) {
-			for(Type t : Type.values()) if(t.value==i) return t;
+			for (Type t : Type.values())
+				if (t.value == i)
+					return t;
 			return null;
 		}
 	}
@@ -58,10 +58,10 @@ public class Participant implements JSerializable {
 
 	@Override
 	public JSerializable deserialize(JSONObject j) {
-		id=j.getString("id");
-		type=Type.lookUp(j.getInt("ptype"));
-		name=j.getString("name");
-		password=j.getString("password");
+		id = j.getString("id");
+		type = Type.lookUp(j.getInt("ptype"));
+		name = j.getString("name");
+		password = j.getString("password");
 		details = j.getJSONObject("details").toMap();
 		return this;
 	}

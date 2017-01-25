@@ -3,18 +3,9 @@ package com.gynt.widm.core;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map.Entry;
+import java.util.Properties;
 
 import com.gynt.widm.io.Serialization;
-
-import java.util.Properties;
-import java.util.ResourceBundle;
-
-import sun.security.util.Resources;
 
 public class Settings {
 
@@ -54,9 +45,8 @@ public class Settings {
 		}
 	}
 
-
 	public static boolean loaded() {
-		return map!=null;
+		return map != null;
 	}
 
 	public Settings() {

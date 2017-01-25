@@ -16,7 +16,9 @@ public class ExceptionDisplay {
 		PrintWriter pw = new PrintWriter(sw);
 		e.printStackTrace(pw);
 		pw.flush();
-		JOptionPane.showMessageDialog(null, "An error occurred: "+message+" \n\n Java StackTrace: \n\n" + sw.toString(), "Fatal error", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(null,
+				"An error occurred: " + message + " \n\n Java StackTrace: \n\n" + sw.toString(), "Fatal error",
+				JOptionPane.ERROR_MESSAGE);
 	}
 
 }
