@@ -30,24 +30,25 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
-import com.gynt.widm.core.Preferences;
-import com.gynt.widm.core.Preferences.PreferenceDir;
-import com.gynt.widm.core.Preferences.PreferenceItem;
-import com.gynt.widm.core.Preferences.PreferenceSub;
+import com.gynt.widm.core.Settings;
+import com.gynt.widm.core.Settings.PreferenceDir;
+import com.gynt.widm.core.Settings.PreferenceItem;
+import com.gynt.widm.core.Settings.PreferenceSub;
 
-public class PrefRenderer extends JPanel {
+public class SettingsPanel extends JPanel {
+
 
 	/**
 	 *
 	 */
-	private static final long serialVersionUID = -1551845699358510952L;
+	private static final long serialVersionUID = 4104785855475407998L;
 	private JPanel prefPanel;
 	private JTree prefTree;
 
 	/**
 	 * Create the panel.
 	 */
-	public PrefRenderer() {
+	public SettingsPanel() {
 		setLayout(new BorderLayout(0, 0));
 
 		JSplitPane splitPane = new JSplitPane();
@@ -263,9 +264,9 @@ public class PrefRenderer extends JPanel {
 	}
 
 	public void render() {
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode(new PrefPanel(Preferences.ROOT));
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode(new PrefPanel(Settings.ROOT));
 		prefTree.setModel(new DefaultTreeModel(root));
-		dirbuild(root, Preferences.ROOT);
+		dirbuild(root, Settings.ROOT);
 	}
 
 	public void dirbuild(DefaultMutableTreeNode currentnode, PreferenceDir current) {
@@ -275,5 +276,4 @@ public class PrefRenderer extends JPanel {
 			dirbuild(sub, dir);
 		}
 	}
-
 }

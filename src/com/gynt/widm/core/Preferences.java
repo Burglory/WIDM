@@ -2,6 +2,7 @@ package com.gynt.widm.core;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
@@ -43,16 +44,7 @@ public class Preferences {
 	static {
 		ROOT = new PreferenceDir();
 		ROOT.name="Preferences";
-		PreferenceSub mode = ROOT.registerDir("Exam").registerSub("VisualMode","Visual styling of the exam");
-		mode.registerItem("1999-2005",  "Old styling (1999-2005)",Radio.class, Boolean.FALSE);
-		mode.registerItem("2006-2010",  "Refreshed styling (2006-2010)", Radio.class, Boolean.FALSE);
-		mode.registerItem("2011-2014",  "Newer styling (2011-2014)",Radio.class, Boolean.TRUE);
-		mode.registerItem("2015-2017",  "Latest styling (2015-2017)",Radio.class, Boolean.FALSE);
-		mode = ROOT.registerDir("Exam").registerSub("MusicMode","Music styling of the exam");
-		mode.registerItem("none", "No music", Radio.class, Boolean.TRUE);
-		mode.registerItem("clues", "Looking for Clues - David Arnold", Radio.class, Boolean.FALSE);
-		mode.registerItem("fourthkind", "The Fourth Kind - Atli Örvarsson", Radio.class, Boolean.FALSE);
-		mode.registerItem("loop", "Loop the music during exam", Boolean.class, Boolean.FALSE);
+
 	}
 
 	public static interface Parentable {
@@ -89,6 +81,9 @@ public class Preferences {
 		public void setValue(Object val) {
 			Object oval = getValue();
 			switch(type.getSimpleName()) {
+			case "File":
+				PROPERTIES.setProperty(path, val.toString());
+				break;
 			case "String":
 				PROPERTIES.setProperty(path, val.toString());
 				break;
@@ -107,11 +102,17 @@ public class Preferences {
 			default:
 				throw new RuntimeException();
 			}
-			if(!oval.equals(val)) tell(oval, val);
+			if(oval!=null) {
+				if(!oval.equals(val)) tell(oval, val);
+			} else {
+				tell(oval, val);
+			}
 		}
 
 		public Object getValue() {
 			switch(type.getSimpleName()) {
+			case "File":
+				return PROPERTIES.getProperty(path)!=null?new File(PROPERTIES.getProperty(path)):new File("");
 			case "String":
 				return PROPERTIES.getProperty(path);
 			case "Boolean":

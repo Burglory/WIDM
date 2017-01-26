@@ -3,6 +3,7 @@ package com.gynt.widm.graphics;
 import java.awt.BorderLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -15,7 +16,29 @@ import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
+import com.gynt.widm.core.Preferences;
+import com.gynt.widm.core.Preferences.PreferenceSub;
+import com.gynt.widm.core.Preferences.Radio;
+import com.gynt.widm.io.Serialization;
+
 public class ExamScreen extends JPanel {
+
+	static {
+		PreferenceSub mode = Preferences.ROOT.registerDir("Exam").registerSub("VisualMode","Visual styling of the exam");
+		mode.registerItem("1999-2005",  "Old styling (1999-2005)",Radio.class, Boolean.FALSE);
+		mode.registerItem("2006-2010",  "Refreshed styling (2006-2010)", Radio.class, Boolean.FALSE);
+		mode.registerItem("2011-2014",  "Newer styling (2011-2014)",Radio.class, Boolean.TRUE);
+		mode.registerItem("2015-2017",  "Latest styling (2015-2017)",Radio.class, Boolean.FALSE);
+		mode = Preferences.ROOT.registerDir("Exam").registerSub("MusicMode","Music styling of the exam");
+		mode.registerItem("clues", "Old (Looking for Clues - David Arnold)", Radio.class, Boolean.FALSE);
+		mode.registerItem("fourthkind", "New (The Fourth Kind - Atli Örvarsson)", Radio.class, Boolean.FALSE);
+		mode.registerItem("custom", "Custom music", Radio.class, Boolean.TRUE);
+		mode.registerItem("custompath", "Custom music path: ", File.class, Serialization.LOADER.getResource(".").getPath());
+		mode.registerItem("none", "No music", Radio.class, Boolean.TRUE);
+		mode.registerItem("loop", "Loop the music during exam", Boolean.class, Boolean.FALSE);
+
+	}
+
 	public ExamScreen() {
 		setLayout(new BorderLayout(0, 0));
 
