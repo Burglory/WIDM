@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Enumeration;
 import java.util.List;
 
 import javax.swing.DefaultCellEditor;
@@ -22,6 +21,8 @@ import javax.swing.table.TableColumn;
 
 import com.gynt.widm.core.Participant;
 import com.gynt.widm.core.Preferences;
+import com.gynt.widm.core.Preferences.PreferenceItem;
+import com.gynt.widm.core.Preferences.PreferenceSub;
 import com.gynt.widm.core.Round;
 
 public class ParticipantScreen extends JPanel {
@@ -30,9 +31,25 @@ public class ParticipantScreen extends JPanel {
 	 *
 	 */
 	private static final long serialVersionUID = 8032171346542801207L;
+	private static PreferenceItem passwords;
+	private static PreferenceItem hidemole;
+	private static PreferenceItem pid;
 	private JTable table;
 	private char passwordchar = '\u25CF';
 	private Round round;
+	private TableColumn namecolumn;
+	private TableColumn idcolumn;
+	private TableColumn passwordcolumn;
+	private TableColumn typecolumn;
+
+	static {
+
+		passwords = Preferences.ROOT.registerDir("Participants").registerSub("Security","Security").registerItem("Use_passwords","Let participants have a password", Boolean.class, Boolean.TRUE);
+		PreferenceSub general = Preferences.ROOT.registerDir("Participants").registerSub("General","General");
+		hidemole = general.registerItem("Hidden", "Hide who the mole is", Boolean.class, Boolean.TRUE);
+		pid = general.registerItem("ID", "Show participant ID", Boolean.class, Boolean.FALSE);
+
+	}
 
 	public ParticipantScreen() {
 		setLayout(new BorderLayout(0, 0));
@@ -132,52 +149,58 @@ public class ParticipantScreen extends JPanel {
 						column);
 				j.setText(length > 0 ? "********" : "");
 				return j;
-				// if(table!=null && table.getColumn("Password")!=null &&
-				// column==table.getColumn("Password").getModelIndex()) {
-				// if(value==null || value.toString().length()==0) {
-				// setText("");
-				// } else
-				// setText("********");
-				// return this;
-				// } else {
-				// return super.getTableCellRendererComponent(table, value,
-				// isSelected, hasFocus, row, column);
-				// }
 			}
 		});
 		table.getColumn("Type").setCellEditor(new DefaultCellEditor(new JComboBox<>(Participant.Type.values())));
-		setupPreferences();
-	}
 
-	private void setupPreferences() {
-		if (Preferences.loaded()) {
-			Enumeration<TableColumn> t = table.getColumnModel().getColumns();
-			while (t.hasMoreElements()) {
-				TableColumn c = t.nextElement();
-				String name = (String) c.getHeaderValue();
+		namecolumn = table.getColumn("Name");
+		idcolumn = table.getColumn("ID");
+		typecolumn = table.getColumn("Type");
+		passwordcolumn = table.getColumn("Password");
 
-				String settingsbase = "Game.Round.ParticipantScreen.Columns." + name;
-				if (!Preferences.has(settingsbase + ".visible")) {
-					Preferences.set(settingsbase + ".visible", Boolean.toString(true));
-				}
-				if (!Preferences.has(settingsbase + ".index")) {
-					Preferences.set(settingsbase + ".index", Integer.toString(0));
-				}
-
-				boolean result = true;
-				try {
-					result = Boolean.parseBoolean(Preferences.get(settingsbase + ".visible"));
-				} catch (Exception e) {
-
-				}
-				if (!result) {
-					table.getColumnModel().removeColumn(c);
-				}
-				int index = Integer.parseInt(Preferences.get(settingsbase + ".index"));
-				table.getColumnModel().moveColumn(table.getColumnModel().getColumnIndex(name), index);
-			}
-
+		if(pid.getValue()==Boolean.FALSE) {
+			table.getColumnModel().removeColumn(idcolumn);
 		}
+		if(hidemole.getValue()==Boolean.TRUE) {
+			table.getColumnModel().removeColumn(typecolumn);
+		}
+		if(passwords.getValue()==Boolean.FALSE) {
+			table.getColumnModel().removeColumn(passwordcolumn);
+		}
+
+		pid.listeners.add(new Preferences.ChangeListener() {
+
+			@Override
+			public void onChange(Object oldValue, Object newValue) {
+				if(oldValue==Boolean.FALSE && newValue==Boolean.TRUE) {
+					table.getColumnModel().addColumn(idcolumn);
+				} else {
+					table.getColumnModel().removeColumn(idcolumn);
+				}
+			}
+		});
+		hidemole.listeners.add(new Preferences.ChangeListener() {
+
+			@Override
+			public void onChange(Object oldValue, Object newValue) {
+				if(oldValue==Boolean.FALSE && newValue==Boolean.TRUE) {
+					table.getColumnModel().removeColumn(typecolumn);
+				} else {
+					table.getColumnModel().addColumn(typecolumn);
+				}
+			}
+		});
+		passwords.listeners.add(new Preferences.ChangeListener() {
+
+			@Override
+			public void onChange(Object oldValue, Object newValue) {
+				if(oldValue==Boolean.FALSE && newValue==Boolean.TRUE) {
+					table.getColumnModel().addColumn(passwordcolumn);
+				} else {
+					table.getColumnModel().removeColumn(passwordcolumn);
+				}
+			}
+		});
 	}
 
 }

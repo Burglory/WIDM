@@ -6,7 +6,6 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import com.gynt.widm.core.Game;
-import com.gynt.widm.core.Preferences;
 import com.gynt.widm.core.Round;
 
 public class GamePanel extends JPanel {
@@ -41,9 +40,12 @@ public class GamePanel extends JPanel {
 			}
 		}
 
-		PreferencesPropertiesScreen preferencesPanel = new PreferencesPropertiesScreen();
-		preferencesPanel.setProperties(Preferences.map);
-		tabbedPane.addTab("Preferences", null, preferencesPanel, null);
+//		PreferencesPropertiesScreen preferencesPanel = new PreferencesPropertiesScreen();
+//		preferencesPanel.setProperties(Preferences.map);
+//		tabbedPane.addTab("Preferences", null, preferencesPanel, null);
+		PrefRenderer pr = new PrefRenderer();
+		pr.render();
+		tabbedPane.addTab("Preferences", null, pr, null);
 	}
 
 }
