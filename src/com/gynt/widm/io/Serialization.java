@@ -48,7 +48,7 @@ public class Serialization {
 		return null;
 	}
 
-	public static ClassLoader LOADER = null;
+	public static URLClassLoader LOADER = null;
 
 	static {
 		try {
