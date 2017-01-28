@@ -3,16 +3,12 @@ package com.gynt.widm.core;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
-
 
 import com.gynt.widm.io.Serialization;
 
@@ -32,7 +28,7 @@ public class Settings {
 	public static void save() throws IOException {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		PROPERTIES.store(bos, "");
-		Path p = new File(Serialization.LOADER.getResource("settings.properties").toString().split("file:/")[1]).toPath();
+		Path p = new File(Serialization.PATH_LOADER.getResource("settings.properties").toString().split("file:/")[1]).toPath();
 		save(p, bos.toByteArray());
 	}
 
@@ -41,8 +37,8 @@ public class Settings {
 	}
 
 	public static void load() throws IOException {
-		if(Serialization.LOADER.getResource("settings.properties")==null) {
-			String path = Serialization.LOADER.getResource("")+"settings.properties";
+		if(Serialization.PATH_LOADER.getResource("settings.properties")==null) {
+			String path = Serialization.PATH_LOADER.getResource("")+"settings.properties";
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			PROPERTIES.store(bos, "");
 
@@ -56,7 +52,7 @@ public class Settings {
 		}
 
 			PROPERTIES.clear();
-			ByteArrayInputStream bis = new ByteArrayInputStream(Files.readAllBytes(new File(Serialization.LOADER.getResource("settings.properties").toString().split("file:/")[1]).toPath()));
+			ByteArrayInputStream bis = new ByteArrayInputStream(Files.readAllBytes(new File(Serialization.PATH_LOADER.getResource("settings.properties").toString().split("file:/")[1]).toPath()));
 			PROPERTIES.load(bis);
 
 	}

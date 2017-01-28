@@ -48,11 +48,12 @@ public class Serialization {
 		return null;
 	}
 
-	public static URLClassLoader LOADER = null;
+	public static ClassLoader LOADER = ClassLoader.getSystemClassLoader();
+	public static URLClassLoader PATH_LOADER = null;
 
 	static {
 		try {
-			LOADER = new URLClassLoader(
+			PATH_LOADER = new URLClassLoader(
 					new URL[] { ClassLoader.getSystemClassLoader().getResource(".").toURI().toURL() });
 		} catch (MalformedURLException e) {
 			ExceptionDisplay.raiseNewExceptionDisplay(e, "Loading of the file loader failed.");

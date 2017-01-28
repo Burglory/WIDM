@@ -63,6 +63,7 @@ public class SettingsPanel extends JPanel {
 		panel.add(scrollPane);
 
 		prefTree = new JTree();
+		//prefTree.setRootVisible(false);
 		prefTree.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent arg0) {
 				PrefPanel d = (PrefPanel) ((DefaultMutableTreeNode) arg0.getNewLeadSelectionPath()

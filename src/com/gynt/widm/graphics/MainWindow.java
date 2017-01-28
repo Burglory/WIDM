@@ -8,7 +8,6 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.zip.ZipException;
@@ -31,8 +30,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.gynt.widm.core.Game;
+import com.gynt.widm.core.Languages;
 import com.gynt.widm.core.Preferences;
 import com.gynt.widm.core.Settings;
+import com.gynt.widm.core.Settings.PreferenceItem;
 import com.gynt.widm.core.util.ExceptionDisplay;
 import com.gynt.widm.io.GameFileContext;
 import com.gynt.widm.resources.RBLoader;
@@ -43,13 +44,14 @@ public class MainWindow extends JFrame {
 	 *
 	 */
 	private static final long serialVersionUID = 3557878564872334551L;
-	private static Object playmusic;
+	private static PreferenceItem playmusic;
 	private JPanel contentPane;
 	private JTabbedPane tabbedPane;
 	private Game game;
 
 	static {
-		playmusic = Settings.ROOT.registerSub("Music", "Music settings").registerItem("startupmusic","Play startup music",Boolean.class, Boolean.TRUE);
+		Languages.initialize();
+		playmusic = Settings.ROOT.registerDir("General").registerSub("Music", "Music settings").registerItem("startupmusic","Play startup music",Boolean.class, Boolean.TRUE);
 	}
 
 	private static void setup() {

@@ -1,5 +1,6 @@
 package com.gynt.widm.graphics.nl.version2014;
 
+import java.awt.BorderLayout;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
@@ -7,7 +8,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 import com.gynt.widm.graphics.AbstractExecutionScreen;
 
@@ -18,7 +21,7 @@ public class ExecutionScreen extends AbstractExecutionScreen {
 	 */
 	private static final long serialVersionUID = -3210312709327332531L;
 
-	public ExecutionScreen(int width, int height) {
+	public ExecutionScreen(int width, int height) throws IOException {
 		super(width, height);
 	}
 
@@ -35,15 +38,9 @@ public class ExecutionScreen extends AbstractExecutionScreen {
 	public static void main(String[] args) throws IOException {
 		// Test
 
-		JFrame frame = new JFrame();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setBounds(100, 100, 1920, 1080);
+		ExecutionScreen e = new ExecutionScreen(1024, 768);
 
-		ExecutionScreen e = new ExecutionScreen(1920, 1080);
-		e.build();
-
-		frame.setContentPane(e);
-		frame.setVisible(true);
+		e.setVisible(true);
 	}
 
 }

@@ -33,7 +33,7 @@ public class ExamScreen extends JPanel {
 		mode.registerItem("clues", "Old (Looking for Clues - David Arnold)", Radio.class, Boolean.FALSE);
 		mode.registerItem("fourthkind", "New (The Fourth Kind - Atli Örvarsson)", Radio.class, Boolean.FALSE);
 		mode.registerItem("custom", "Custom music", Radio.class, Boolean.TRUE);
-		mode.registerItem("custompath", "Custom music path: ", File.class, Serialization.LOADER.getResource(".").getPath());
+		mode.registerItem("custompath", "Custom music path: ", File.class, Serialization.PATH_LOADER.getResource(".").getPath());
 		mode.registerItem("none", "No music", Radio.class, Boolean.TRUE);
 		mode.registerItem("loop", "Loop the music during exam", Boolean.class, Boolean.FALSE);
 
