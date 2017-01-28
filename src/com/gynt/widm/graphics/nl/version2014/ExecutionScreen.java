@@ -12,9 +12,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import com.gynt.widm.graphics.AbstractExecutionScreen;
+import com.gynt.widm.graphics.AbstractBackgroundScreen;
+import com.gynt.widm.graphics.FullscreenFrame;
 
-public class ExecutionScreen extends AbstractExecutionScreen {
+public class ExecutionScreen extends AbstractBackgroundScreen {
 
 	/**
 	 *
@@ -25,22 +26,24 @@ public class ExecutionScreen extends AbstractExecutionScreen {
 		super(width, height);
 	}
 
-	public void build() throws IOException {
+	@Override
+	public Image build() throws IOException {
 		Image original = ImageIO.read(getClass().getResourceAsStream("/resources/images/g14.png"));
 		BufferedImage i = new BufferedImage(dwidth, dheight, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = i.createGraphics();
 		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 		g.drawImage(original, 0, 0, dwidth, dheight, null);
 		g.dispose();
-		image = i;
+		return i;
 	}
 
 	public static void main(String[] args) throws IOException {
 		// Test
-
+		FullscreenFrame ff = new FullscreenFrame();
 		ExecutionScreen e = new ExecutionScreen(1024, 768);
 
-		e.setVisible(true);
+		ff.setContentPane(e);
+		ff.setVisible(true);
 	}
 
 }

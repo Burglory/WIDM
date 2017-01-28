@@ -7,6 +7,8 @@ import com.gynt.widm.core.Preferences.PreferenceItem;
 import com.gynt.widm.core.Preferences.PreferenceSub;
 
 public class ExecutionScreen extends JPanel {
+	public ExecutionScreen() {
+	}
 
 	private static PreferenceItem oldstyle;
 	private static PreferenceItem newstyle;

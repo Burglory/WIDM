@@ -121,6 +121,9 @@ public class Settings {
 			case "Double":
 				PROPERTIES.setProperty(path, Double.toString((double) val));
 				break;
+			case "Float":
+				PROPERTIES.setProperty(path, Float.toString((float) val));
+				break;
 			default:
 				throw new RuntimeException();
 			}
@@ -144,7 +147,9 @@ public class Settings {
 			case "Integer":
 				return Integer.parseInt(PROPERTIES.getProperty(path));
 			case "Double":
-				return Double.parseDouble(PROPERTIES.getProperty(path));
+				return Double.parseDouble(PROPERTIES.getProperty(path)==null?"0.0":PROPERTIES.getProperty(path));
+			case "Float":
+				return Float.parseFloat(PROPERTIES.getProperty(path)==null?"0.0":PROPERTIES.getProperty(path));
 			default:
 				throw new RuntimeException();
 			}

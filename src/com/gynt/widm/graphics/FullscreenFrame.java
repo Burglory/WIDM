@@ -14,25 +14,17 @@ public class FullscreenFrame extends JFrame {
 	 *
 	 */
 	private static final long serialVersionUID = 4009363245616373310L;
-
-	private JPanel contentPane = new JPanel(new BorderLayout(0, 0));
 	
 	public FullscreenFrame() {
-		//setType(Type.UTILITY);
 		addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent arg0) {
 				if(arg0.getKeyCode()==KeyEvent.VK_ESCAPE) FullscreenFrame.this.dispose();
 			}
 		});
-		this.setContentPane(contentPane);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		this.setUndecorated(true);
-	}
-	
-	public void setPanel(JPanel panel) {
-		this.getContentPane().add(panel, BorderLayout.CENTER);
 	}
 
 	@Override

@@ -31,17 +31,17 @@ public class ExamLoginScreen extends JPanel {
 	 */
 	public ExamLoginScreen() {
 		setBackground(Color.BLACK);
-		
-		//JLabel lblNewLabel = new JLabel("New label");
-		image = ImageGenerator.createExamBackground(200, 200);
-		//add(lblNewLabel);
+		image = ImageGenerator.createExamBackground(1024/3);
+	}
+	
+	public ExamLoginScreen(int width, int height) {
 		
 	}
 	
 	@Override
-	public void paintComponents(Graphics g) {
-		super.paintComponents(g);
-		g.drawImage(image, 0, 0, null);
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		g.drawImage(image, (1024-image.getWidth(null))/2, (768-image.getHeight(null))/2, null);
 	}
 
 	public static void main(String[] args) {
@@ -56,10 +56,9 @@ public class ExamLoginScreen extends JPanel {
 
 			}
 		}
-		System.out.println("ok");
 		FullscreenFrame ff = new FullscreenFrame();
 		ExamLoginScreen els = new ExamLoginScreen();
-		ff.setPanel(els);
+		ff.setContentPane(els);
 		ff.setVisible(true);
 	}
 	

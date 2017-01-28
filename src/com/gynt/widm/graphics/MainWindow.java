@@ -35,8 +35,8 @@ import com.gynt.widm.core.Preferences;
 import com.gynt.widm.core.Settings;
 import com.gynt.widm.core.Settings.PreferenceItem;
 import com.gynt.widm.core.util.ExceptionDisplay;
+import com.gynt.widm.graphics.util.ImageGenerator;
 import com.gynt.widm.io.GameFileContext;
-import com.gynt.widm.resources.RBLoader;
 
 public class MainWindow extends JFrame {
 
@@ -62,7 +62,6 @@ public class MainWindow extends JFrame {
 			e.printStackTrace();
 		}
 		setLookAndFeel();
-		RBLoader.load();
 	}
 
 	private static void setLookAndFeel() {

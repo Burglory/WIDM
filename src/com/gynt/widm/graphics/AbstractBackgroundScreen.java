@@ -12,11 +12,12 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public abstract class AbstractExecutionScreen extends JFrame {
+public abstract class AbstractBackgroundScreen extends JPanel {
 
 	/**
 	 *
@@ -27,7 +28,6 @@ public abstract class AbstractExecutionScreen extends JFrame {
 	
 	static {
 		cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
-
 		blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(
 		    cursorImg, new Point(0, 0), "blank cursor");
 	}
@@ -35,28 +35,23 @@ public abstract class AbstractExecutionScreen extends JFrame {
 	protected final int dwidth;
 	protected final int dheight;
 	protected Image image;
-	private JLabel contentPane;
 
-	public AbstractExecutionScreen(int width, int height) throws IOException {
+	public AbstractBackgroundScreen(int width, int height) throws IOException {
 		this.dwidth = width;
 		this.dheight = height;
-		build();
-		contentPane = new JLabel(new ImageIcon(image));
-		contentPane.setLayout(new BorderLayout(0, 0));
-		contentPane.setCursor(blankCursor);
+		image = build();
+		if(image==null) throw new RuntimeException();
+		setLayout(new BorderLayout(0, 0));
+		setCursor(blankCursor);
 		
-		addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent arg0) {
-				if(arg0.getKeyCode()==KeyEvent.VK_ESCAPE) AbstractExecutionScreen.this.dispose();
-			}
-		});
-		this.setContentPane(contentPane);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		this.setUndecorated(true);
+	}
+	
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		g.drawImage(image, 0, 0, null);
 	}
 
-	public abstract void build() throws IOException;
+	public abstract Image build() throws IOException;
 
 }
