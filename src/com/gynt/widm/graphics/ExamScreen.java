@@ -75,6 +75,7 @@ public class ExamScreen extends JPanel {
 
 		JSplitPane splitPane = new JSplitPane();
 		panel.add(splitPane, BorderLayout.CENTER);
+		splitPane.setResizeWeight(0.75);
 
 		JPanel panel_1 = new JPanel();
 		splitPane.setLeftComponent(panel_1);
@@ -128,7 +129,7 @@ public class ExamScreen extends JPanel {
 			}
 		});
 
-		splitPane.setDividerLocation(.75);
+		
 	}
 
 	/**

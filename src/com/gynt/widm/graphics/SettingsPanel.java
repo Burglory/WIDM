@@ -36,6 +36,7 @@ import com.gynt.widm.core.Settings;
 import com.gynt.widm.core.Settings.PreferenceDir;
 import com.gynt.widm.core.Settings.PreferenceItem;
 import com.gynt.widm.core.Settings.PreferenceSub;
+import com.gynt.widm.core.util.JTreeUtil;
 
 public class SettingsPanel extends JPanel {
 
@@ -260,14 +261,19 @@ public class SettingsPanel extends JPanel {
 						JLabel label = new JLabel(pi.description);
 						JSpinner js = new JSpinner(new SpinnerModel() {
 
+							private ArrayList<ChangeListener> listeners = new ArrayList<>();
+
 							@Override
 							public void setValue(Object value) {
 								pi.setValue(value);
+								for(ChangeListener l : listeners) {
+									l.stateChanged(new ChangeEvent(this));
+								}
 							}
 
 							@Override
 							public void removeChangeListener(ChangeListener l) {
-
+								listeners.remove(l);
 							}
 
 							@Override
@@ -277,17 +283,60 @@ public class SettingsPanel extends JPanel {
 
 							@Override
 							public Object getPreviousValue() {
-								return (Integer)pi.getValue() - 1;
+								return (Integer)getValue()-1;
 							}
 
 							@Override
 							public Object getNextValue() {
-								return (Integer)pi.getValue() + 1;
+								return (Integer)getValue()+1;
 							}
 
 							@Override
 							public void addChangeListener(ChangeListener l) {
+								listeners.add(l);
+							}
+						});
+						subpanel.add(label);
+						subpanel.add(js);
+						break;
+					}
+					case "Double": {
+						JLabel label = new JLabel(pi.description);
+						JSpinner js = new JSpinner(new SpinnerModel() {
 
+							private ArrayList<ChangeListener> listeners = new ArrayList<>();
+
+							@Override
+							public void setValue(Object value) {
+								pi.setValue(value);
+								for(ChangeListener l : listeners) {
+									l.stateChanged(new ChangeEvent(this));
+								}
+							}
+
+							@Override
+							public void removeChangeListener(ChangeListener l) {
+								listeners.remove(l);
+							}
+
+							@Override
+							public Object getValue() {
+								return pi.getValue();
+							}
+
+							@Override
+							public Object getPreviousValue() {
+								return (Double)getValue()-0.1f;
+							}
+
+							@Override
+							public Object getNextValue() {
+								return (Double)getValue()+0.1f;
+							}
+
+							@Override
+							public void addChangeListener(ChangeListener l) {
+								listeners.add(l);
 							}
 						});
 						subpanel.add(label);
@@ -312,6 +361,7 @@ public class SettingsPanel extends JPanel {
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode(new PrefPanel(Settings.ROOT));
 		prefTree.setModel(new DefaultTreeModel(root));
 		dirbuild(root, Settings.ROOT);
+		JTreeUtil.expandAllNodes(prefTree);
 	}
 
 	public void dirbuild(DefaultMutableTreeNode currentnode, PreferenceDir current) {

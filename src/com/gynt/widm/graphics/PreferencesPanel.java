@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -22,6 +23,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.SpinnerModel;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -34,6 +36,7 @@ import com.gynt.widm.core.Preferences;
 import com.gynt.widm.core.Preferences.PreferenceDir;
 import com.gynt.widm.core.Preferences.PreferenceItem;
 import com.gynt.widm.core.Preferences.PreferenceSub;
+import com.gynt.widm.core.util.JTreeUtil;
 
 public class PreferencesPanel extends JPanel {
 
@@ -213,15 +216,20 @@ public class PreferencesPanel extends JPanel {
 						System.out.println("Rendering float");
 						JLabel label = new JLabel(pi.description);
 						JSpinner js = new JSpinner(new SpinnerModel() {
+							
+							private ArrayList<ChangeListener> listeners = new ArrayList<>();
 
 							@Override
 							public void setValue(Object value) {
 								pi.setValue(value);
+								for(ChangeListener l : listeners) {
+									l.stateChanged(new ChangeEvent(this));
+								}
 							}
 
 							@Override
 							public void removeChangeListener(ChangeListener l) {
-
+								listeners.remove(l);
 							}
 
 							@Override
@@ -241,7 +249,7 @@ public class PreferencesPanel extends JPanel {
 
 							@Override
 							public void addChangeListener(ChangeListener l) {
-
+								listeners.add(l);
 							}
 						});
 						subpanel.add(label);
@@ -252,14 +260,19 @@ public class PreferencesPanel extends JPanel {
 						JLabel label = new JLabel(pi.description);
 						JSpinner js = new JSpinner(new SpinnerModel() {
 
+							private ArrayList<ChangeListener> listeners = new ArrayList<>();
+
 							@Override
 							public void setValue(Object value) {
 								pi.setValue(value);
+								for(ChangeListener l : listeners) {
+									l.stateChanged(new ChangeEvent(this));
+								}
 							}
 
 							@Override
 							public void removeChangeListener(ChangeListener l) {
-
+								listeners.remove(l);
 							}
 
 							@Override
@@ -269,17 +282,60 @@ public class PreferencesPanel extends JPanel {
 
 							@Override
 							public Object getPreviousValue() {
-								return (Integer)pi.getValue() - 1;
+								return (Integer)getValue()-1;
 							}
 
 							@Override
 							public Object getNextValue() {
-								return (Integer)pi.getValue() + 1;
+								return (Integer)getValue()+1;
 							}
 
 							@Override
 							public void addChangeListener(ChangeListener l) {
+								listeners.add(l);
+							}
+						});
+						subpanel.add(label);
+						subpanel.add(js);
+						break;
+					}
+					case "Double": {
+						JLabel label = new JLabel(pi.description);
+						JSpinner js = new JSpinner(new SpinnerModel() {
 
+							private ArrayList<ChangeListener> listeners = new ArrayList<>();
+
+							@Override
+							public void setValue(Object value) {
+								pi.setValue(value);
+								for(ChangeListener l : listeners) {
+									l.stateChanged(new ChangeEvent(this));
+								}
+							}
+
+							@Override
+							public void removeChangeListener(ChangeListener l) {
+								listeners.remove(l);
+							}
+
+							@Override
+							public Object getValue() {
+								return pi.getValue();
+							}
+
+							@Override
+							public Object getPreviousValue() {
+								return (Double)getValue()-0.1f;
+							}
+
+							@Override
+							public Object getNextValue() {
+								return (Double)getValue()+0.1f;
+							}
+
+							@Override
+							public void addChangeListener(ChangeListener l) {
+								listeners.add(l);
 							}
 						});
 						subpanel.add(label);
@@ -304,6 +360,7 @@ public class PreferencesPanel extends JPanel {
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode(new PrefPanel(Preferences.ROOT));
 		prefTree.setModel(new DefaultTreeModel(root));
 		dirbuild(root, Preferences.ROOT);
+		JTreeUtil.expandAllNodes(prefTree);
 	}
 
 	public void dirbuild(DefaultMutableTreeNode currentnode, PreferenceDir current) {
