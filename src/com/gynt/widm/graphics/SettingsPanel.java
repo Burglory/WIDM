@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -22,6 +23,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.SpinnerModel;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -210,15 +212,57 @@ public class SettingsPanel extends JPanel {
 						subpanel.add(jtf);
 						break;
 					}
+					case "Float": {
+						System.out.println("Rendering float");
+						JLabel label = new JLabel(pi.description);
+						JSpinner js = new JSpinner(new SpinnerModel() {
+							
+							private ArrayList<ChangeListener> listeners = new ArrayList<>();
+
+							@Override
+							public void setValue(Object value) {
+								pi.setValue(value);
+								for(ChangeListener l : listeners) {
+									l.stateChanged(new ChangeEvent(this));
+								}
+							}
+
+							@Override
+							public void removeChangeListener(ChangeListener l) {
+								listeners.remove(l);
+							}
+
+							@Override
+							public Object getValue() {
+								return pi.getValue();
+							}
+
+							@Override
+							public Object getPreviousValue() {
+								return (Float)getValue()-0.1f;
+							}
+
+							@Override
+							public Object getNextValue() {
+								return (Float)getValue()+0.1f;
+							}
+
+							@Override
+							public void addChangeListener(ChangeListener l) {
+								listeners.add(l);
+							}
+						});
+						subpanel.add(label);
+						subpanel.add(js);
+						break;
+					}
 					case "Integer": {
 						JLabel label = new JLabel(pi.description);
 						JSpinner js = new JSpinner(new SpinnerModel() {
 
-							private int val;
-
 							@Override
 							public void setValue(Object value) {
-								val = (int) value;
+								pi.setValue(value);
 							}
 
 							@Override
@@ -228,17 +272,17 @@ public class SettingsPanel extends JPanel {
 
 							@Override
 							public Object getValue() {
-								return val;
+								return pi.getValue();
 							}
 
 							@Override
 							public Object getPreviousValue() {
-								return val - 1;
+								return (Integer)pi.getValue() - 1;
 							}
 
 							@Override
 							public Object getNextValue() {
-								return val + 1;
+								return (Integer)pi.getValue() + 1;
 							}
 
 							@Override

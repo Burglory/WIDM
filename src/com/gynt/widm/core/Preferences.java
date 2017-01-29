@@ -18,16 +18,20 @@ public class Preferences {
 		}
 	}
 
-	public static Game game;
+	public Game game;
 	public static Properties PROPERTIES = new Properties();
+	
+	public Preferences(Game g) {
+		game=g;
+	}
 
-	public static void save() throws IOException {
+	public void save() throws IOException {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		PROPERTIES.store(bos, "");
 		game.fileinterface.store(bos.toByteArray(), "preferences.properties");
 	}
 
-	public static void load() throws IOException {
+	public void load() throws IOException {
 		if (game.fileinterface != null) {
 			PROPERTIES.clear();
 			ByteArrayInputStream bis = new ByteArrayInputStream(game.fileinterface.retrieve("preferences.properties"));
@@ -35,7 +39,7 @@ public class Preferences {
 		}
 	}
 
-	public static boolean loaded() {
+	public boolean loaded() {
 		return game != null && PROPERTIES != null;
 	}
 

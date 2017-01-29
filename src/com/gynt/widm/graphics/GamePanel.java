@@ -43,7 +43,7 @@ public class GamePanel extends JPanel {
 //		PreferencesPropertiesScreen preferencesPanel = new PreferencesPropertiesScreen();
 //		preferencesPanel.setProperties(Preferences.map);
 //		tabbedPane.addTab("Preferences", null, preferencesPanel, null);
-		PrefRenderer pr = new PrefRenderer();
+		PreferencesPanel pr = new PreferencesPanel();
 		pr.render();
 		tabbedPane.addTab("Preferences", null, pr, null);
 	}

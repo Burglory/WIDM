@@ -14,6 +14,7 @@ public class Game implements JSerializable {
 
 	public ArrayList<Round> rounds = new ArrayList<>();
 	public GameFileContext fileinterface;
+	public Preferences preferences;
 
 	public void save() throws IOException {
 		fileinterface.store(serialize().toString().getBytes(Charset.forName("UTF-8")), "gamefile.json");

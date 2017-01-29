@@ -29,7 +29,11 @@ public class ImageGenerator {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		brightness = Settings.ROOT.registerDir("Exam").registerSub("Background", "Background").registerItem("Brightness", "Brightness", Float.class, 0.80F);
+		brightness = Settings.ROOT.registerDir("Exam").registerSub("Background", "Background").registerItem("Brightness", "Brightness", Float.class, Float.valueOf(0.80f));
+	}
+	
+	public static void wakey() {
+		
 	}
 	
 	public static Image createExamBackground(int width, int height) {

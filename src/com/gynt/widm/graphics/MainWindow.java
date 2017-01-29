@@ -52,6 +52,7 @@ public class MainWindow extends JFrame {
 	static {
 		Languages.initialize();
 		playmusic = Settings.ROOT.registerDir("General").registerSub("Music", "Music settings").registerItem("startupmusic","Play startup music",Boolean.class, Boolean.TRUE);
+		ImageGenerator.wakey();
 	}
 
 	private static void setup() {
@@ -123,8 +124,8 @@ public class MainWindow extends JFrame {
 				game.fileinterface = new GameFileContext(new File(jfc.getSelectedFile().getPath() + ".widm"));
 			}
 			game.load();
-			Preferences.game = game;
-			Preferences.load();
+			game.preferences=new Preferences(game);
+			game.preferences.load();
 		}
 	}
 
@@ -149,8 +150,8 @@ public class MainWindow extends JFrame {
 			return;
 		if (game.fileinterface != null) {
 			game.save();
-			Preferences.game = game;
-			Preferences.save();
+			game.preferences = new Preferences(game);
+			game.preferences.save();
 
 			game.fileinterface.save();
 		} else {
@@ -298,9 +299,9 @@ public class MainWindow extends JFrame {
 
 	private void loadGame(Game g) {
 		game = g;
-		Preferences.game = g;
+		game.preferences=new Preferences(game);
 		try {
-			Preferences.load();
+			game.preferences.load();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

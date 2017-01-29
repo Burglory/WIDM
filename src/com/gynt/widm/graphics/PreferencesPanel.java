@@ -35,7 +35,7 @@ import com.gynt.widm.core.Preferences.PreferenceDir;
 import com.gynt.widm.core.Preferences.PreferenceItem;
 import com.gynt.widm.core.Preferences.PreferenceSub;
 
-public class PrefRenderer extends JPanel {
+public class PreferencesPanel extends JPanel {
 
 	/**
 	 *
@@ -47,7 +47,7 @@ public class PrefRenderer extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public PrefRenderer() {
+	public PreferencesPanel() {
 		setLayout(new BorderLayout(0, 0));
 
 		JSplitPane splitPane = new JSplitPane();
@@ -113,7 +113,7 @@ public class PrefRenderer extends JPanel {
 				ButtonGroup bg = new ButtonGroup();
 				for (int i = 0; i < sub.items.size(); i++) {
 					PreferenceItem pi = sub.items.get(i);
-					// System.out.println(pi.type.getSimpleName());
+					//System.out.println(pi.type.getSimpleName());
 					switch (pi.type.getSimpleName()) {
 					case "File": {
 						JLabel label = new JLabel(pi.description);
@@ -209,15 +209,14 @@ public class PrefRenderer extends JPanel {
 						subpanel.add(jtf);
 						break;
 					}
-					case "Integer": {
+					case "Float": {
+						System.out.println("Rendering float");
 						JLabel label = new JLabel(pi.description);
 						JSpinner js = new JSpinner(new SpinnerModel() {
 
-							private int val;
-
 							@Override
 							public void setValue(Object value) {
-								val = (int) value;
+								pi.setValue(value);
 							}
 
 							@Override
@@ -227,17 +226,55 @@ public class PrefRenderer extends JPanel {
 
 							@Override
 							public Object getValue() {
-								return val;
+								return pi.getValue();
 							}
 
 							@Override
 							public Object getPreviousValue() {
-								return val - 1;
+								return (Float)getValue()-0.1f;
 							}
 
 							@Override
 							public Object getNextValue() {
-								return val + 1;
+								return (Float)getValue()+0.1f;
+							}
+
+							@Override
+							public void addChangeListener(ChangeListener l) {
+
+							}
+						});
+						subpanel.add(label);
+						subpanel.add(js);
+						break;
+					}
+					case "Integer": {
+						JLabel label = new JLabel(pi.description);
+						JSpinner js = new JSpinner(new SpinnerModel() {
+
+							@Override
+							public void setValue(Object value) {
+								pi.setValue(value);
+							}
+
+							@Override
+							public void removeChangeListener(ChangeListener l) {
+
+							}
+
+							@Override
+							public Object getValue() {
+								return pi.getValue();
+							}
+
+							@Override
+							public Object getPreviousValue() {
+								return (Integer)pi.getValue() - 1;
+							}
+
+							@Override
+							public Object getNextValue() {
+								return (Integer)pi.getValue() + 1;
 							}
 
 							@Override
