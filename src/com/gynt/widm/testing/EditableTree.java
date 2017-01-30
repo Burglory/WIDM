@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Rectangle;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JFrame;
@@ -16,7 +17,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.CellEditorListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.AbstractLayoutCache;
+import javax.swing.tree.AbstractLayoutCache.NodeDimensions;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
@@ -80,7 +84,7 @@ public class EditableTree extends JFrame {
 		private Choice part;
 
 		public ChoiceNode(Choice choice) {
-			part=choice;
+			part = choice;
 		}
 
 		@Override
@@ -140,12 +144,12 @@ public class EditableTree extends JFrame {
 
 		@Override
 		public void setParent(MutableTreeNode newParent) {
-			parent=newParent;
+			parent = newParent;
 		}
 
 		@Override
 		public void setUserObject(Object object) {
-			part.text=(String) object;
+			part.text = (String) object;
 		}
 
 		@Override
@@ -235,12 +239,12 @@ public class EditableTree extends JFrame {
 
 		@Override
 		public void setParent(MutableTreeNode arg0) {
-			parent=arg0;
+			parent = arg0;
 		}
 
 		@Override
 		public void setUserObject(Object arg0) {
-			part.question=(String) arg0;
+			part.question = (String) arg0;
 		}
 
 		@Override
@@ -265,150 +269,63 @@ public class EditableTree extends JFrame {
 		contentPane.add(scrollPane, BorderLayout.CENTER);
 
 		JTree tree = new JTree();
-//		tree.setCellEditor(new TreeCellEditor() {
-//
-//			@Override
-//			public boolean stopCellEditing() {
-//				return true;
-//			}
-//
-//			@Override
-//			public boolean shouldSelectCell(EventObject anEvent) {
-//				return true;
-//			}
-//
-//			public ArrayList<CellEditorListener> listeners = new ArrayList<>();
-//
-//			@Override
-//			public void removeCellEditorListener(CellEditorListener l) {
-//				listeners.remove(l);
-//			}
-//
-//			@Override
-//			public boolean isCellEditable(EventObject anEvent) {
-//				return true;
-//			}
-//
-//			@Override
-//			public Object getCellEditorValue() {
-//				return editor.getText();
-//			}
-//
-//			@Override
-//			public void cancelCellEditing() {
-//				editor
-//			}
-//
-//			@Override
-//			public void addCellEditorListener(CellEditorListener l) {
-//				listeners.add(l);
-//			}
-//
-//			private final JTextField editor = new JTextField() {
-//
-//			    @Override
-//			    public Dimension getPreferredSize() {
-//			        Dimension dim = super.getPreferredSize();
-//			        int length = getText().length();
-//			        dim.width += length * 10;
-//			        //dim.height += length * 2;
-//			        return dim;
-//			    }
-//			};
-//			{
-//				editor.getDocument().addDocumentListener(new DocumentListener() {
-//
-//
-//				    protected void validateEditor(final JTextField field) {
-//				        // the selectionModel's rowMapper is-a AbstractLayoutCache
-//				        // BEWARE: implementation detail!
-//				        TreeSelectionModel model = tree.getSelectionModel();
-//				        // invalidate all cached node sizes/locations
-//				        ((AbstractLayoutCache) model.getRowMapper()).invalidateSizes();
-//				        // just a fancy cover method for revalidate/repaint
-//				        tree.treeDidChange();
-//				        // manually set the component's size
-//				        field.setSize(field.getPreferredSize());
-//				    }
-//				    @Override
-//				    public void insertUpdate(DocumentEvent e) {
-//				        validateEditor(editor);
-//				    }
-//
-//				    @Override
-//				    public void removeUpdate(DocumentEvent e) {
-//				        validateEditor(editor);
-//				    }
-//
-//				    @Override
-//				    public void changedUpdate(DocumentEvent e) {
-//				    }
-//				});
-//			}
-//
-//
-//			@Override
-//			public Component getTreeCellEditorComponent(JTree tree, Object value, boolean isSelected, boolean expanded,
-//					boolean leaf, int row) {
-//				editor.setText(((DefaultMutableTreeNode) value).getUserObject().toString());
-//				return editor;
-//			}
-//		});
 		JTextField field = new JTextField() {
-		    @Override
-		    public Dimension getPreferredSize() {
-		        Dimension dim = super.getPreferredSize();
-		        int length = getText().length();
-		       // dim.width = dim
-		        //dim.width=getText().length()*1.5;
-		        //dim.height += length * 2;
-		        return dim;
-		    }
+//			@Override
+//			public Dimension getPreferredSize() {
+//				Dimension dim = super.getPreferredSize();
+//				int length = getText().length();
+//				dim.width += 5;
+//				// dim.width = dim
+//				// dim.width=getText().length()*1.5;
+//				// dim.height += length * 2;
+//				return dim;
+//			}
 		};
 		field.getDocument().addDocumentListener(new DocumentListener() {
 
+			protected void validateEditor(final JTextField field) {
+				// the selectionModel's rowMapper is-a AbstractLayoutCache
+				// BEWARE: implementation detail!
+				TreeSelectionModel model = tree.getSelectionModel();
+				// invalidate all cached node sizes/locations
+				((AbstractLayoutCache) model.getRowMapper()).invalidateSizes();
+				//((AbstractLayoutCache) model.getRowMapper()).treeNodesChanged(new TreeModelEvent(, arg1));
+				// just a fancy cover method for revalidate/repaint
+				tree.treeDidChange();
+				// manually set the component's size
+				field.setSize(field.getPreferredSize());
+			}
 
-		    protected void validateEditor(final JTextField field) {
-		        // the selectionModel's rowMapper is-a AbstractLayoutCache
-		        // BEWARE: implementation detail!
-		        TreeSelectionModel model = tree.getSelectionModel();
-		        // invalidate all cached node sizes/locations
-		        ((AbstractLayoutCache) model.getRowMapper()).invalidateSizes();
-		        // just a fancy cover method for revalidate/repaint
-		        tree.treeDidChange();
-		        // manually set the component's size
-		        field.setSize(field.getPreferredSize());
-		    }
-		    @Override
-		    public void insertUpdate(DocumentEvent e) {
-		        validateEditor(field);
-		    }
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				validateEditor(field);
+			}
 
-		    @Override
-		    public void removeUpdate(DocumentEvent e) {
-		        validateEditor(field);
-		    }
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				validateEditor(field);
+			}
 
-		    @Override
-		    public void changedUpdate(DocumentEvent e) {
-		    	validateEditor(field);
-		    }
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				validateEditor(field);
+			}
 		});
 		tree.setCellRenderer(new DefaultTreeCellRenderer() {
 			@Override
-			public Component getTreeCellRendererComponent(JTree tree,
-			    Object value, boolean selected, boolean expanded,
-			    boolean leaf, int row, boolean hasFocus) {
-				DefaultTreeCellRenderer c = (DefaultTreeCellRenderer) super.getTreeCellRendererComponent(tree, value, selected,expanded, leaf, row, hasFocus);
-			        MutableTreeNode nodo = (MutableTreeNode) value;
-			        if (nodo instanceof ChoicePartNode) {
-			           c.setIcon(ImageGenerator.getChoicePartIcon());
-			        } else if (nodo instanceof ChoiceNode) {
-			            c.setIcon(ImageGenerator.getChoiceIcon());
-			        } else {
-			            //setIcon(leaf);
-			        }
-			        return c;
+			public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded,
+					boolean leaf, int row, boolean hasFocus) {
+				DefaultTreeCellRenderer c = (DefaultTreeCellRenderer) super.getTreeCellRendererComponent(tree, value,
+						selected, expanded, leaf, row, hasFocus);
+				MutableTreeNode nodo = (MutableTreeNode) value;
+				if (nodo instanceof ChoicePartNode) {
+					c.setIcon(ImageGenerator.getChoicePartIcon());
+				} else if (nodo instanceof ChoiceNode) {
+					c.setIcon(ImageGenerator.getChoiceIcon());
+				} else {
+					// setIcon(leaf);
+				}
+				return c;
 			}
 		});
 		tree.setCellEditor(new DefaultCellEditor(field));
@@ -416,7 +333,7 @@ public class EditableTree extends JFrame {
 		tree.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				if(arg0.getClickCount()>1) {
+				if (arg0.getClickCount() > 1) {
 					tree.startEditingAtPath(tree.getSelectionPath());
 				}
 			}
