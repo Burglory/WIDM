@@ -17,6 +17,7 @@ import javax.swing.ImageIcon;
 
 import com.gynt.widm.core.Settings;
 import com.gynt.widm.core.Settings.PreferenceItem;
+import com.gynt.widm.io.Serialization;
 
 public class ImageGenerator {
 
@@ -29,22 +30,22 @@ public class ImageGenerator {
 
 	static{
 		try {
-			i = ImageIO.read(new File("X:\\My Documents\\Projects\\widm\\fingerprint.jpg"));
-			i2 = ImageIO.read(new File("X:\\My Documents\\Projects\\widm\\de_mol.png"));
+			i = ImageIO.read(Serialization.LOADER.getResourceAsStream("resources/images/fingerprint.jpg"));
+			i2 = ImageIO.read(Serialization.LOADER.getResourceAsStream("resources/images/de_mol.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		brightness = Settings.ROOT.registerDir("Exam").registerSub("Background", "Background").registerItem("Brightness", "Brightness", Float.class, Float.valueOf(0.80f));
 	}
-	
+
 	public static void wakey() {
-		
+
 	}
-	
+
 	public static Image createExamBackground(int width, int height) {
 		BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		
+
 		  Graphics2D tGraphics2D = bi.createGraphics(); //create a graphics object to paint to
 		  tGraphics2D.setRenderingHint( RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR );
 		  tGraphics2D.drawImage(i, 0, 0, width, height, null ); //draw the image scaled
@@ -58,13 +59,13 @@ public class ImageGenerator {
 		int height = (int) ((((double)width)/i.getWidth())*i.getHeight());
 		return createExamBackground(width, height);
 	}
-	
+
 	public static ImageIcon getExamIcon() {
 		if(examicon!=null) return examicon;
 		int width=16;
 		int height = 16;
 		BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		
+
 		 Graphics2D g = bi.createGraphics(); //create a graphics object to paint to
 		  g.setRenderingHint( RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR );
 		  g.setColor(Color.gray);
@@ -73,17 +74,17 @@ public class ImageGenerator {
 		  while(i<height) {
 			  g.drawLine(0, i, width, i);
 			  i=i+4;
-		  }		
+		  }
 		examicon = new ImageIcon(bi);
 		return examicon;
 	}
-	
+
 	public static ImageIcon getChoiceIcon() {
 		if(choiceicon!=null) return choiceicon;
 		int width=16;
 		int height = 16;
 		BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		
+
 		 Graphics2D g = bi.createGraphics(); //create a graphics object to paint to
 		  g.setRenderingHint( RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR );
 		  g.setColor(Color.gray);
@@ -92,13 +93,13 @@ public class ImageGenerator {
 		  choiceicon = new ImageIcon(bi);
 		return choiceicon;
 	}
-	
+
 	public static ImageIcon getChoicePartIcon() {
 		if(choiceparticon!=null) return choiceparticon;
 		int width=16;
 		int height = 16;
 		BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		
+
 		 Graphics2D g = bi.createGraphics(); //create a graphics object to paint to
 		  g.setRenderingHint( RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR );
 		  g.setColor(Color.gray);
@@ -109,5 +110,5 @@ public class ImageGenerator {
 		  choiceparticon = new ImageIcon(bi);
 		return choiceparticon;
 	}
-	
+
 }

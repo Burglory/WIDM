@@ -31,7 +31,7 @@ public class ExamLoginScreen extends JPanel {
 	 */
 	public ExamLoginScreen() {
 		setBackground(Color.BLACK);
-		image = ImageGenerator.createExamBackground(1024/3);
+		image = ImageGenerator.createExamBackground(1920/3);
 	}
 	
 	public ExamLoginScreen(int width, int height) {
@@ -41,7 +41,7 @@ public class ExamLoginScreen extends JPanel {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.drawImage(image, (1024-image.getWidth(null))/2, (768-image.getHeight(null))/2, null);
+		g.drawImage(image, (1920-image.getWidth(null))/2, (1080-image.getHeight(null))/2, null);
 	}
 
 	public static void main(String[] args) {

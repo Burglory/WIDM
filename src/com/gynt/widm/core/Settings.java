@@ -28,7 +28,7 @@ public class Settings {
 	public static void save() throws IOException {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		PROPERTIES.store(bos, "");
-		Path p = new File(Serialization.PATH_LOADER.getResource("settings.properties").toString().split("file:/")[1]).toPath();
+		Path p = new File(Serialization.PATH_LOADER.getResource("settings.properties").toString().split("file:")[1]).toPath();
 		save(p, bos.toByteArray());
 	}
 

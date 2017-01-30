@@ -73,13 +73,13 @@ public class EditableTree extends JFrame {
 			}
 		});
 	}
-	
-	public static class AnswerNode implements MutableTreeNode {
+
+	public static class ChoiceNode implements MutableTreeNode {
 
 		private MutableTreeNode parent;
 		private Choice part;
 
-		public AnswerNode(Choice choice) {
+		public ChoiceNode(Choice choice) {
 			part=choice;
 		}
 
@@ -120,7 +120,7 @@ public class EditableTree extends JFrame {
 
 		@Override
 		public void insert(MutableTreeNode child, int index) {
-			
+
 		}
 
 		@Override
@@ -147,29 +147,29 @@ public class EditableTree extends JFrame {
 		public void setUserObject(Object object) {
 			part.text=(String) object;
 		}
-		
+
 		@Override
 		public String toString() {
 			return part.text;
 		}
-		
+
 	}
-	
-	public static class QuestionNode implements MutableTreeNode {
+
+	public static class ChoicePartNode implements MutableTreeNode {
 
 		private ChoicePart part;
-		private ArrayList<AnswerNode> children = new ArrayList<AnswerNode>();
+		private ArrayList<ChoiceNode> children = new ArrayList<ChoiceNode>();
 		private MutableTreeNode parent;
 
-		public QuestionNode(ChoicePart e) {
+		public ChoicePartNode(ChoicePart e) {
 			part = e;
 		}
-		
+
 		@Override
-		public Enumeration<AnswerNode> children() {
-			return new Enumeration<EditableTree.AnswerNode>() {
-				
-				private final Iterator<AnswerNode> i = children.iterator();
+		public Enumeration<ChoiceNode> children() {
+			return new Enumeration<EditableTree.ChoiceNode>() {
+
+				private final Iterator<ChoiceNode> i = children.iterator();
 
 				@Override
 				public boolean hasMoreElements() {
@@ -177,7 +177,7 @@ public class EditableTree extends JFrame {
 				}
 
 				@Override
-				public AnswerNode nextElement() {
+				public ChoiceNode nextElement() {
 					return i.next();
 				}
 			};
@@ -215,7 +215,7 @@ public class EditableTree extends JFrame {
 
 		@Override
 		public void insert(MutableTreeNode arg0, int arg1) {
-			children.add(arg1, (AnswerNode) arg0);
+			children.add(arg1, (ChoiceNode) arg0);
 		}
 
 		@Override
@@ -242,12 +242,12 @@ public class EditableTree extends JFrame {
 		public void setUserObject(Object arg0) {
 			part.question=(String) arg0;
 		}
-		
+
 		@Override
 		public String toString() {
 			return part.question;
 		}
-		
+
 	}
 
 	/**
@@ -260,50 +260,50 @@ public class EditableTree extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
-		
+
 		JScrollPane scrollPane = new JScrollPane();
 		contentPane.add(scrollPane, BorderLayout.CENTER);
-		
+
 		JTree tree = new JTree();
 //		tree.setCellEditor(new TreeCellEditor() {
-//			
+//
 //			@Override
 //			public boolean stopCellEditing() {
 //				return true;
 //			}
-//			
+//
 //			@Override
 //			public boolean shouldSelectCell(EventObject anEvent) {
 //				return true;
 //			}
-//			
+//
 //			public ArrayList<CellEditorListener> listeners = new ArrayList<>();
-//			
+//
 //			@Override
 //			public void removeCellEditorListener(CellEditorListener l) {
 //				listeners.remove(l);
 //			}
-//			
+//
 //			@Override
 //			public boolean isCellEditable(EventObject anEvent) {
 //				return true;
 //			}
-//			
+//
 //			@Override
 //			public Object getCellEditorValue() {
 //				return editor.getText();
 //			}
-//			
+//
 //			@Override
 //			public void cancelCellEditing() {
 //				editor
 //			}
-//			
+//
 //			@Override
 //			public void addCellEditorListener(CellEditorListener l) {
 //				listeners.add(l);
 //			}
-//			
+//
 //			private final JTextField editor = new JTextField() {
 //
 //			    @Override
@@ -317,7 +317,7 @@ public class EditableTree extends JFrame {
 //			};
 //			{
 //				editor.getDocument().addDocumentListener(new DocumentListener() {
-//					
+//
 //
 //				    protected void validateEditor(final JTextField field) {
 //				        // the selectionModel's rowMapper is-a AbstractLayoutCache
@@ -345,8 +345,8 @@ public class EditableTree extends JFrame {
 //				    }
 //				});
 //			}
-//			
-//			
+//
+//
 //			@Override
 //			public Component getTreeCellEditorComponent(JTree tree, Object value, boolean isSelected, boolean expanded,
 //					boolean leaf, int row) {
@@ -366,7 +366,7 @@ public class EditableTree extends JFrame {
 		    }
 		};
 		field.getDocument().addDocumentListener(new DocumentListener() {
-			
+
 
 		    protected void validateEditor(final JTextField field) {
 		        // the selectionModel's rowMapper is-a AbstractLayoutCache
@@ -391,7 +391,7 @@ public class EditableTree extends JFrame {
 
 		    @Override
 		    public void changedUpdate(DocumentEvent e) {
-
+		    	validateEditor(field);
 		    }
 		});
 		tree.setCellRenderer(new DefaultTreeCellRenderer() {
@@ -401,9 +401,9 @@ public class EditableTree extends JFrame {
 			    boolean leaf, int row, boolean hasFocus) {
 				DefaultTreeCellRenderer c = (DefaultTreeCellRenderer) super.getTreeCellRendererComponent(tree, value, selected,expanded, leaf, row, hasFocus);
 			        MutableTreeNode nodo = (MutableTreeNode) value;
-			        if (nodo instanceof QuestionNode) {
+			        if (nodo instanceof ChoicePartNode) {
 			           c.setIcon(ImageGenerator.getChoicePartIcon());
-			        } else if (nodo instanceof AnswerNode) {
+			        } else if (nodo instanceof ChoiceNode) {
 			            c.setIcon(ImageGenerator.getChoiceIcon());
 			        } else {
 			            //setIcon(leaf);
@@ -423,8 +423,8 @@ public class EditableTree extends JFrame {
 		});
 		tree.setEditable(true);
 		scrollPane.setViewportView(tree);
-		QuestionNode root = new QuestionNode(new ChoicePart());
-		root.children.add(new AnswerNode(new Choice()));
+		ChoicePartNode root = new ChoicePartNode(new ChoicePart());
+		root.children.add(new ChoiceNode(new Choice()));
 		tree.setModel(new DefaultTreeModel(root));
 	}
 
