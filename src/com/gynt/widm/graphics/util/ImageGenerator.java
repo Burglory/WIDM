@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Polygon;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
@@ -26,6 +27,8 @@ public class ImageGenerator {
 	private static ImageIcon choiceparticon;
 	private static ImageIcon entryparticon;
 	private static ImageIcon textparticon;
+	private static ImageIcon tryexamicon;
+	private static ImageIcon runexamicon;
 
 	static{
 		try {
@@ -132,6 +135,34 @@ public class ImageGenerator {
 		  g.drawString("T", 0, 12);
 		  textparticon = new ImageIcon(bi);
 		return textparticon;
+	}
+
+	public static ImageIcon getTryExamIcon() {
+		if(tryexamicon!=null) return tryexamicon;
+		int width=16;
+		int height = 16;
+		BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+		 Graphics2D g = bi.createGraphics(); //create a graphics object to paint to
+		  g.setRenderingHint( RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR );
+		  g.setColor(Color.BLUE);
+		  g.fillPolygon(new Polygon(new int[]{2, 14, 2}, new int[]{2, 8, 14}, 3));
+		  tryexamicon = new ImageIcon(bi);
+		return tryexamicon;
+	}
+
+	public static ImageIcon getRunExamIcon() {
+		if(runexamicon!=null) return runexamicon;
+		int width=16;
+		int height = 16;
+		BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+		 Graphics2D g = bi.createGraphics(); //create a graphics object to paint to
+		  g.setRenderingHint( RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR );
+		  g.setColor(Color.GREEN);
+		  g.fillPolygon(new Polygon(new int[]{2, 14, 2}, new int[]{2, 8, 14}, 3));
+		  runexamicon = new ImageIcon(bi);
+		return runexamicon;
 	}
 
 }

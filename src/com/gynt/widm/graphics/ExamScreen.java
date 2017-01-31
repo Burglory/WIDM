@@ -342,10 +342,14 @@ public class ExamScreen extends JPanel {
 		JToolBar toolBar = new JToolBar();
 		add(toolBar, BorderLayout.NORTH);
 
-		JButton btnTry = new JButton("Try...");
+		JButton btnTry = new JButton();
+		btnTry.setIcon(ImageGenerator.getTryExamIcon());
+		btnTry.setToolTipText("Try");
 		toolBar.add(btnTry);
 
-		JButton btnRun = new JButton("Run...");
+		JButton btnRun = new JButton();
+		btnRun.setIcon(ImageGenerator.getRunExamIcon());
+		btnRun.setToolTipText("Run");
 		toolBar.add(btnRun);
 
 		JSeparator separator = new JSeparator();
