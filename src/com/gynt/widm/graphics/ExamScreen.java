@@ -1,12 +1,16 @@
 package com.gynt.widm.graphics;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 
 import javax.swing.DefaultCellEditor;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -14,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -24,14 +29,17 @@ import javax.swing.tree.AbstractLayoutCache;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
 import com.gynt.widm.core.ChoicePart;
 import com.gynt.widm.core.ChoicePart.Choice;
 import com.gynt.widm.core.Preferences.PreferenceSub;
 import com.gynt.widm.core.Preferences.Radio;
+import com.gynt.widm.core.TextPart;
 import com.gynt.widm.core.EntryPart;
 import com.gynt.widm.core.Exam;
+import com.gynt.widm.core.ExamPart;
 import com.gynt.widm.core.Preferences;
 import com.gynt.widm.graphics.util.ImageGenerator;
 import com.gynt.widm.graphics.util.TreeNodeUtil;
@@ -40,11 +48,15 @@ import com.gynt.widm.graphics.util.TreeNodeUtil.Entity;
 import com.gynt.widm.graphics.util.TreeNodeUtil.NoChildrenNode;
 import com.gynt.widm.io.Serialization;
 
+import javafx.scene.control.ComboBox;
+
 import javax.swing.JToolBar;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
 
 public class ExamScreen extends JPanel {
 
@@ -257,6 +269,55 @@ public class ExamScreen extends JPanel {
 		}
 
 	}
+	
+	public static class TextPartNode extends NoChildrenNode {
+
+		private TextPart part;
+		public TextPartNode(TextPart e) {
+			part = e;
+			components.put("text", new TreeNodeUtil.Component<String>() {
+
+				@Override
+				public void set(String val) {
+					part.text=val;
+				}
+
+				@Override
+				public String get() {
+					return part.text;
+				}
+
+			});
+			components.put("icon", new TreeNodeUtil.Component<ImageIcon>() {
+
+				private ImageIcon icon = ImageGenerator.getEntryPartIcon();
+
+				@Override
+				public void set(ImageIcon val) {
+					icon=val;
+				}
+
+				@Override
+				public ImageIcon get() {
+					return icon;
+				}
+			});
+		}
+
+		@Override
+		public void setUserObject(Object arg0) {
+			part.text = (String) arg0;
+		}
+
+		@Override
+		public String toString() {
+			return part.text;
+		}
+
+	}
+
+	private JComboBox<Class<?>> comboBox;
+	private DefaultTreeModel model;
 
 	/**
 	 * Create the frame.
@@ -337,7 +398,8 @@ public class ExamScreen extends JPanel {
 		base.add(root);
 		EntryPartNode entry = new EntryPartNode(new EntryPart());
 		base.add(entry);
-		tree.setModel(new DefaultTreeModel(base));
+		model = new DefaultTreeModel(base);
+		tree.setModel(model);
 
 		JToolBar toolBar = new JToolBar();
 		add(toolBar, BorderLayout.NORTH);
@@ -353,16 +415,93 @@ public class ExamScreen extends JPanel {
 		toolBar.add(btnRun);
 
 		JSeparator separator = new JSeparator();
+		separator.setOrientation(SwingConstants.VERTICAL);
 		toolBar.add(separator);
 
 		JButton btnNew = new JButton("New");
 		toolBar.add(btnNew);
 
 		JButton btnAdd = new JButton("Add");
+		btnAdd.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(tree.getSelectionPath()==null) return;
+				MutableTreeNode last = (MutableTreeNode) tree.getSelectionPath().getLastPathComponent();
+				if(last instanceof ChildrenNode) {
+					if(last instanceof ChoicePartNode) {
+						Choice c = new Choice();
+						((ChoicePartNode) last).part.choices.add(c);
+						((ChildrenNode) last).add(new ChoiceNode(c));
+					}
+				} else {
+					ExamNode parent = (ExamNode) last.getParent();
+					switch(((Class<?>) comboBox.getSelectedItem()).getSimpleName()) {
+					case "EntryPart": {
+						System.out.println("ADding");
+						EntryPart ep = new EntryPart();
+						parent.part.parts.add(ep);
+						parent.add(new EntryPartNode(ep));
+						break;
+					}
+					case "TextPart": {
+						TextPart ep = new TextPart();
+						parent.part.parts.add(ep);
+						parent.add(new TextPartNode(ep));
+						break;
+					}
+					case "ChoicePart": {
+						ChoicePart ep = new ChoicePart();
+						parent.part.parts.add(ep);
+						parent.add(new ChoicePartNode(ep));
+						break;
+					}
+						
+					}
+				}
+			}
+		});
 		toolBar.add(btnAdd);
 
-		JComboBox comboBox = new JComboBox();
+		comboBox = new JComboBox<>();
+		comboBox.setRenderer(new DefaultListCellRenderer() {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 5943145235145801746L;
+
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+					boolean cellHasFocus) {
+				JLabel c =  (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+				switch(((Class<?>) value).getSimpleName()) {
+				case "ChoicePart": {
+					c.setText("Multiple choice");
+					break;
+				}
+				case "TextPart": {
+					c.setText("Display text");
+					break;
+				}
+				case "EntryPart": {
+					c.setText("Text entry");
+					break;
+				}
+				case "Choice": {
+					c.setText("Option");
+					break;
+				}
+				}
+				return c;
+			}
+
+		});
 		toolBar.add(comboBox);
+		
+		comboBox.addItem(ChoicePart.class);
+		comboBox.addItem(EntryPart.class);
+		comboBox.addItem(TextPart.class);
+		comboBox.addItem(Choice.class);
 
 		JButton btnRemove = new JButton("Remove");
 		toolBar.add(btnRemove);
@@ -371,6 +510,7 @@ public class ExamScreen extends JPanel {
 		toolBar.add(btnAddTemplate);
 
 		JSeparator separator_1 = new JSeparator();
+		separator_1.setOrientation(SwingConstants.VERTICAL);
 		toolBar.add(separator_1);
 
 		JButton btnImport = new JButton("Import...");
@@ -380,6 +520,7 @@ public class ExamScreen extends JPanel {
 		toolBar.add(btnExport);
 
 		JSeparator separator_2 = new JSeparator();
+		separator_2.setOrientation(SwingConstants.VERTICAL);
 		toolBar.add(separator_2);
 
 		JButton btnAdvanced = new JButton("Advanced...");

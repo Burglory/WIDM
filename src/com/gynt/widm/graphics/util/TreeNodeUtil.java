@@ -152,7 +152,7 @@ public class TreeNodeUtil {
 
 		@Override
 		public boolean isLeaf() {
-			return false;
+			return true;
 		}
 
 		@Override
