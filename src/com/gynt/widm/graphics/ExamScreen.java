@@ -1,27 +1,57 @@
 package com.gynt.widm.graphics;
 
 import java.awt.BorderLayout;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.EventQueue;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
+import javax.swing.DefaultCellEditor;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTable;
-import javax.swing.JToolBar;
+import javax.swing.JTextField;
 import javax.swing.JTree;
-import javax.swing.ListSelectionModel;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.tree.AbstractLayoutCache;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeSelectionModel;
 
-import com.gynt.widm.core.Preferences;
+import com.gynt.widm.core.ChoicePart;
+import com.gynt.widm.core.ChoicePart.Choice;
 import com.gynt.widm.core.Preferences.PreferenceSub;
 import com.gynt.widm.core.Preferences.Radio;
+import com.gynt.widm.core.EntryPart;
+import com.gynt.widm.core.Exam;
+import com.gynt.widm.core.Preferences;
+import com.gynt.widm.graphics.util.ImageGenerator;
+import com.gynt.widm.graphics.util.TreeNodeUtil;
+import com.gynt.widm.graphics.util.TreeNodeUtil.ChildrenNode;
+import com.gynt.widm.graphics.util.TreeNodeUtil.Entity;
+import com.gynt.widm.graphics.util.TreeNodeUtil.NoChildrenNode;
 import com.gynt.widm.io.Serialization;
 
+import javax.swing.JToolBar;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JSeparator;
+
 public class ExamScreen extends JPanel {
+
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 4150609711492271645L;
 
 	static {
 		PreferenceSub mode = Preferences.ROOT.registerDir("Exam").registerSub("VisualMode","Visual styling of the exam");
@@ -31,7 +61,7 @@ public class ExamScreen extends JPanel {
 		mode.registerItem("2015-2017",  "Latest styling (2015-2017)",Radio.class, Boolean.FALSE);
 		mode = Preferences.ROOT.registerDir("Exam").registerSub("MusicMode","Music styling of the exam");
 		mode.registerItem("clues", "Old (Looking for Clues - David Arnold)", Radio.class, Boolean.FALSE);
-		mode.registerItem("fourthkind", "New (The Fourth Kind - Atli Örvarsson)", Radio.class, Boolean.FALSE);
+		mode.registerItem("fourthkind", "New (The Fourth Kind - Atli Orvarsson)", Radio.class, Boolean.FALSE);
 		mode.registerItem("custom", "Custom music", Radio.class, Boolean.TRUE);
 		mode.registerItem("custompath", "Custom music path: ", File.class, Serialization.PATH_LOADER.getResource(".").getPath());
 		mode.registerItem("none", "No music", Radio.class, Boolean.TRUE);
@@ -39,29 +69,278 @@ public class ExamScreen extends JPanel {
 
 	}
 
+	public static class ExamNode extends ChildrenNode {
+
+		private Exam part;
+
+		public ExamNode(Exam exam) {
+			part = exam;
+			components.put("text", new TreeNodeUtil.Component<String>() {
+
+				@Override
+				public void set(String val) {
+					part.name=val;
+				}
+
+				@Override
+				public String get() {
+					return part.name;
+				}
+
+			});
+			components.put("icon", new TreeNodeUtil.Component<ImageIcon>() {
+
+				private ImageIcon icon = ImageGenerator.getExamIcon();
+
+				@Override
+				public void set(ImageIcon val) {
+					icon=val;
+				}
+
+				@Override
+				public ImageIcon get() {
+					return icon;
+				}
+			});
+		}
+
+		@Override
+		public void setUserObject(Object object) {
+			part.name = (String) object;
+		}
+
+		@Override
+		public String toString() {
+			return part.name;
+		}
+
+	}
+
+
+	public static class ChoiceNode extends NoChildrenNode {
+
+		private Choice part;
+
+		public ChoiceNode(Choice choice) {
+			part = choice;
+			components.put("text", new TreeNodeUtil.Component<String>() {
+
+				@Override
+				public void set(String val) {
+					part.text=val;
+				}
+
+				@Override
+				public String get() {
+					return part.text;
+				}
+
+			});
+			components.put("icon", new TreeNodeUtil.Component<ImageIcon>() {
+
+				private ImageIcon icon = ImageGenerator.getChoiceIcon();
+
+				@Override
+				public void set(ImageIcon val) {
+					icon=val;
+				}
+
+				@Override
+				public ImageIcon get() {
+					return icon;
+				}
+			});
+		}
+
+		@Override
+		public void setUserObject(Object object) {
+			part.text = (String) object;
+		}
+
+		@Override
+		public String toString() {
+			return part.text;
+		}
+
+	}
+
+	public static class ChoicePartNode extends ChildrenNode {
+
+		private ChoicePart part;
+
+		public ChoicePartNode(ChoicePart e) {
+			part = e;
+			components.put("text", new TreeNodeUtil.Component<String>() {
+
+				@Override
+				public void set(String val) {
+					part.question=val;
+				}
+
+				@Override
+				public String get() {
+					return part.question;
+				}
+
+			});
+			components.put("icon", new TreeNodeUtil.Component<ImageIcon>() {
+
+				private ImageIcon icon = ImageGenerator.getChoicePartIcon();
+
+				@Override
+				public void set(ImageIcon val) {
+					icon=val;
+				}
+
+				@Override
+				public ImageIcon get() {
+					return icon;
+				}
+			});
+		}
+
+		@Override
+		public void setUserObject(Object arg0) {
+			part.question = (String) arg0;
+		}
+
+		@Override
+		public String toString() {
+			return part.question;
+		}
+
+	}
+
+
+	public static class EntryPartNode extends NoChildrenNode {
+
+		private EntryPart part;
+		public EntryPartNode(EntryPart e) {
+			part = e;
+			components.put("text", new TreeNodeUtil.Component<String>() {
+
+				@Override
+				public void set(String val) {
+					part.question=val;
+				}
+
+				@Override
+				public String get() {
+					return part.question;
+				}
+
+			});
+			components.put("icon", new TreeNodeUtil.Component<ImageIcon>() {
+
+				private ImageIcon icon = ImageGenerator.getEntryPartIcon();
+
+				@Override
+				public void set(ImageIcon val) {
+					icon=val;
+				}
+
+				@Override
+				public ImageIcon get() {
+					return icon;
+				}
+			});
+		}
+
+		@Override
+		public void setUserObject(Object arg0) {
+			part.question = (String) arg0;
+		}
+
+		@Override
+		public String toString() {
+			return part.question;
+		}
+
+	}
+
+	/**
+	 * Create the frame.
+	 */
 	public ExamScreen() {
+
+		setBorder(new EmptyBorder(5, 5, 5, 5));
 		setLayout(new BorderLayout(0, 0));
+
+		JScrollPane scrollPane = new JScrollPane();
+		add(scrollPane, BorderLayout.CENTER);
+
+		JTree tree = new JTree();
+		JTextField field = new JTextField();
+		field.getDocument().addDocumentListener(new DocumentListener() {
+
+			protected void validateEditor(final JTextField field) {
+				if(tree.getSelectionPath().getLastPathComponent() instanceof Entity) {
+					if(((Entity) tree.getSelectionPath().getLastPathComponent()).components.containsKey("text")) {
+						((Entity) tree.getSelectionPath().getLastPathComponent()).components.get("text").set(field.getText());
+					}
+				}
+				TreeSelectionModel model = tree.getSelectionModel();
+				((AbstractLayoutCache) model.getRowMapper()).invalidateSizes();
+				tree.revalidate();
+				field.setSize(field.getPreferredSize());
+			}
+
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				validateEditor(field);
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				validateEditor(field);
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				validateEditor(field);
+			}
+		});
+		tree.setCellRenderer(new DefaultTreeCellRenderer() {
+			/**
+			 *
+			 */
+			private static final long serialVersionUID = -224398418091734517L;
+
+			@Override
+			public java.awt.Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded,
+					boolean leaf, int row, boolean hasFocus) {
+				DefaultTreeCellRenderer c = (DefaultTreeCellRenderer) super.getTreeCellRendererComponent(tree, value,
+						selected, expanded, leaf, row, hasFocus);
+				if(value instanceof Entity) {
+					if(((Entity) value).components.containsKey("icon")) {
+						c.setIcon((Icon) ((Entity) value).components.get("icon").get());
+					}
+				}
+				return c;
+			}
+		});
+		tree.setCellEditor(new DefaultCellEditor(field));
+		tree.setToggleClickCount(0);
+		tree.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if (arg0.getClickCount() > 1) {
+					tree.startEditingAtPath(tree.getSelectionPath());
+				}
+			}
+		});
+		tree.setEditable(true);
+		scrollPane.setViewportView(tree);
+		ExamNode base = new ExamNode(new Exam());
+		ChoicePartNode root = new ChoicePartNode(new ChoicePart());
+		root.children.add(new ChoiceNode(new Choice()));
+		base.add(root);
+		EntryPartNode entry = new EntryPartNode(new EntryPart());
+		base.add(entry);
+		tree.setModel(new DefaultTreeModel(base));
 
 		JToolBar toolBar = new JToolBar();
 		add(toolBar, BorderLayout.NORTH);
-
-		JButton btnAddQuestion = new JButton("New question");
-		toolBar.add(btnAddQuestion);
-
-		JButton btnRemoveQuestion = new JButton("Remove question");
-		toolBar.add(btnRemoveQuestion);
-
-		JComboBox<String> comboBox = new JComboBox<String>();
-		comboBox.addItem("<Add template>");
-		comboBox.addItem("Who is the Mole?");
-		comboBox.addItem("What gender is the Mole?");
-		toolBar.add(comboBox);
-
-		JButton btnImport = new JButton("Import...");
-		toolBar.add(btnImport);
-
-		JButton btnExport = new JButton("Export...");
-		toolBar.add(btnExport);
 
 		JButton btnTry = new JButton("Try...");
 		toolBar.add(btnTry);
@@ -69,73 +348,47 @@ public class ExamScreen extends JPanel {
 		JButton btnRun = new JButton("Run...");
 		toolBar.add(btnRun);
 
-		JPanel panel = new JPanel();
-		add(panel, BorderLayout.CENTER);
-		panel.setLayout(new BorderLayout(0, 0));
+		JSeparator separator = new JSeparator();
+		toolBar.add(separator);
 
-		JSplitPane splitPane = new JSplitPane();
-		panel.add(splitPane, BorderLayout.CENTER);
-		splitPane.setResizeWeight(0.75);
+		JButton btnNew = new JButton("New");
+		toolBar.add(btnNew);
 
-		JPanel panel_1 = new JPanel();
-		splitPane.setLeftComponent(panel_1);
-		panel_1.setLayout(new BorderLayout(0, 0));
+		JButton btnAdd = new JButton("Add");
+		toolBar.add(btnAdd);
 
-		JScrollPane scrollPane = new JScrollPane();
-		panel_1.add(scrollPane);
+		JComboBox comboBox = new JComboBox();
+		toolBar.add(comboBox);
 
-		JTree tree = new JTree();
-		scrollPane.setViewportView(tree);
+		JButton btnRemove = new JButton("Remove");
+		toolBar.add(btnRemove);
 
-		JPanel panel_2 = new JPanel();
-		splitPane.setRightComponent(panel_2);
-		panel_2.setLayout(new BorderLayout(0, 0));
+		JButton btnAddTemplate = new JButton("Add mole question");
+		toolBar.add(btnAddTemplate);
 
-		JScrollPane scrollPane_1 = new JScrollPane();
-		panel_2.add(scrollPane_1);
+		JSeparator separator_1 = new JSeparator();
+		toolBar.add(separator_1);
 
-		table = new JTable();
-		table.setFillsViewportHeight(true);
-		table.setRowSelectionAllowed(false);
-		table.setCellSelectionEnabled(true);
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		table.setModel(new DefaultTableModel(
-				new Object[][] { { null, null }, { null, null }, { null, null }, { null, null }, { null, null },
-						{ null, null }, { null, null }, { null, null }, { null, null }, { null, null }, },
-				new String[] { "Applies", "Participant" }) {
-			Class[] columnTypes = new Class[] { Boolean.class, String.class };
+		JButton btnImport = new JButton("Import...");
+		toolBar.add(btnImport);
 
-			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
-			}
-		});
-		table.getColumnModel().getColumn(0).setPreferredWidth(60);
-		table.getColumnModel().getColumn(0).setMinWidth(60);
-		table.getColumnModel().getColumn(0).setMaxWidth(60);
-		table.getColumnModel().getColumn(1).setPreferredWidth(150);
-		table.getColumnModel().getColumn(1).setMinWidth(150);
-		scrollPane_1.setViewportView(table);
+		JButton btnExport = new JButton("Export...");
+		toolBar.add(btnExport);
 
-		table.setSize(table.getPreferredSize());
-		scrollPane_1.setSize(table.getPreferredSize());
-		scrollPane_1.addComponentListener(new ComponentAdapter() {
-			@Override
-			public void componentResized(final ComponentEvent e) {
-				if (table.getPreferredSize().width < table.getParent().getWidth()) {
-					table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-				} else {
-					table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-				}
-			}
-		});
+		JSeparator separator_2 = new JSeparator();
+		toolBar.add(separator_2);
 
-		
+		JButton btnAdvanced = new JButton("Advanced...");
+		toolBar.add(btnAdvanced);
+
+		JToolBar statusBar = new JToolBar();
+		statusBar.setFloatable(false);
+		add(statusBar, BorderLayout.SOUTH);
+
+		JLabel lblStatus = new JLabel("status");
+		statusBar.add(lblStatus);
+
+
 	}
-
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 8032171346542801207L;
-	private JTable table;
 
 }

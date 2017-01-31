@@ -34,16 +34,20 @@ public class TreeNodeUtil {
 		public Enumeration<MutableTreeNode> children() {
 			return new Enumeration<MutableTreeNode>() {
 
-				private final Iterator<MutableTreeNode> i = children.iterator();
+				int index = 0;
+
+				//private final Iterator<MutableTreeNode> i = children.iterator();
 
 				@Override
 				public boolean hasMoreElements() {
-					return i.hasNext();
+					return index>children.size();
+					//return i.hasNext();
 				}
 
 				@Override
 				public MutableTreeNode nextElement() {
-					return i.next();
+					return children.get(index);
+					//return i.next();
 				}
 			};
 		}
@@ -55,7 +59,7 @@ public class TreeNodeUtil {
 
 		@Override
 		public TreeNode getChildAt(int arg0) {
-			return children.get(0);
+			return children.get(arg0);
 		}
 
 		@Override
@@ -81,6 +85,10 @@ public class TreeNodeUtil {
 		@Override
 		public void insert(MutableTreeNode arg0, int arg1) {
 			children.add(arg1, arg0);
+		}
+
+		public void add(MutableTreeNode arg0) {
+			children.add(arg0);
 		}
 
 		@Override

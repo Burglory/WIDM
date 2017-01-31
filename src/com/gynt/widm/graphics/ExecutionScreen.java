@@ -5,9 +5,19 @@ import javax.swing.JPanel;
 import com.gynt.widm.core.Preferences;
 import com.gynt.widm.core.Preferences.PreferenceItem;
 import com.gynt.widm.core.Preferences.PreferenceSub;
+import javax.swing.JToolBar;
+import java.awt.BorderLayout;
+import javax.swing.JButton;
 
 public class ExecutionScreen extends JPanel {
 	public ExecutionScreen() {
+		setLayout(new BorderLayout(0, 0));
+
+		JToolBar toolBar = new JToolBar();
+		add(toolBar, BorderLayout.NORTH);
+
+		JButton btnNextRound = new JButton("Next round...");
+		toolBar.add(btnNextRound);
 	}
 
 	private static PreferenceItem oldstyle;
