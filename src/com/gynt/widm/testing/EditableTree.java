@@ -1,54 +1,45 @@
 package com.gynt.widm.testing;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.DefaultCellEditor;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.JTree;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.CellEditorListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.AbstractLayoutCache;
-import javax.swing.tree.AbstractLayoutCache.NodeDimensions;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreeCellEditor;
-import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
 import com.gynt.widm.core.ChoicePart;
 import com.gynt.widm.core.ChoicePart.Choice;
-import com.gynt.widm.core.ExamPart;
+import com.gynt.widm.core.EntryPart;
 import com.gynt.widm.graphics.util.ImageGenerator;
-
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.JTree;
-
-import java.awt.event.FocusAdapter;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.EventObject;
-import java.util.Iterator;
+import com.gynt.widm.graphics.util.TreeNodeUtil;
+import com.gynt.widm.graphics.util.TreeNodeUtil.ChildrenNode;
+import com.gynt.widm.graphics.util.TreeNodeUtil.Entity;
+import com.gynt.widm.graphics.util.TreeNodeUtil.NoChildrenNode;
 
 public class EditableTree extends JFrame {
 
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 4150609711492271645L;
 	private JPanel contentPane;
 
 	/**
@@ -78,73 +69,41 @@ public class EditableTree extends JFrame {
 		});
 	}
 
-	public static class ChoiceNode implements MutableTreeNode {
 
-		private MutableTreeNode parent;
+
+	public static class ChoiceNode extends NoChildrenNode {
+
 		private Choice part;
 
 		public ChoiceNode(Choice choice) {
 			part = choice;
-		}
+			components.put("text", new TreeNodeUtil.Component<String>() {
 
-		@Override
-		public Enumeration children() {
-			return null;
-		}
+				@Override
+				public void set(String val) {
+					part.text=val;
+				}
 
-		@Override
-		public boolean getAllowsChildren() {
-			return false;
-		}
+				@Override
+				public String get() {
+					return part.text;
+				}
 
-		@Override
-		public TreeNode getChildAt(int childIndex) {
-			return null;
-		}
+			});
+			components.put("icon", new TreeNodeUtil.Component<ImageIcon>() {
 
-		@Override
-		public int getChildCount() {
-			return 0;
-		}
+				private ImageIcon icon = ImageGenerator.getChoiceIcon();
 
-		@Override
-		public int getIndex(TreeNode node) {
-			return -1;
-		}
+				@Override
+				public void set(ImageIcon val) {
+					icon=val;
+				}
 
-		@Override
-		public TreeNode getParent() {
-			return parent;
-		}
-
-		@Override
-		public boolean isLeaf() {
-			return true;
-		}
-
-		@Override
-		public void insert(MutableTreeNode child, int index) {
-
-		}
-
-		@Override
-		public void remove(int index) {
-
-		}
-
-		@Override
-		public void remove(MutableTreeNode node) {
-
-		}
-
-		@Override
-		public void removeFromParent() {
-			parent.remove(this);
-		}
-
-		@Override
-		public void setParent(MutableTreeNode newParent) {
-			parent = newParent;
+				@Override
+				public ImageIcon get() {
+					return icon;
+				}
+			});
 		}
 
 		@Override
@@ -159,87 +118,86 @@ public class EditableTree extends JFrame {
 
 	}
 
-	public static class ChoicePartNode implements MutableTreeNode {
+	public static class ChoicePartNode extends ChildrenNode {
 
 		private ChoicePart part;
-		private ArrayList<ChoiceNode> children = new ArrayList<ChoiceNode>();
-		private MutableTreeNode parent;
 
 		public ChoicePartNode(ChoicePart e) {
 			part = e;
-		}
-
-		@Override
-		public Enumeration<ChoiceNode> children() {
-			return new Enumeration<EditableTree.ChoiceNode>() {
-
-				private final Iterator<ChoiceNode> i = children.iterator();
+			components.put("text", new TreeNodeUtil.Component<String>() {
 
 				@Override
-				public boolean hasMoreElements() {
-					return i.hasNext();
+				public void set(String val) {
+					part.question=val;
 				}
 
 				@Override
-				public ChoiceNode nextElement() {
-					return i.next();
+				public String get() {
+					return part.question;
 				}
-			};
+
+			});
+			components.put("icon", new TreeNodeUtil.Component<ImageIcon>() {
+
+				private ImageIcon icon = ImageGenerator.getChoicePartIcon();
+
+				@Override
+				public void set(ImageIcon val) {
+					icon=val;
+				}
+
+				@Override
+				public ImageIcon get() {
+					return icon;
+				}
+			});
 		}
 
 		@Override
-		public boolean getAllowsChildren() {
-			return true;
+		public void setUserObject(Object arg0) {
+			part.question = (String) arg0;
 		}
 
 		@Override
-		public TreeNode getChildAt(int arg0) {
-			return children.get(0);
+		public String toString() {
+			return part.question;
 		}
 
-		@Override
-		public int getChildCount() {
-			return children.size();
-		}
+	}
 
-		@Override
-		public int getIndex(TreeNode arg0) {
-			return children.indexOf(arg0);
-		}
 
-		@Override
-		public TreeNode getParent() {
-			return parent;
-		}
+	public static class EntryPartNode extends NoChildrenNode {
 
-		@Override
-		public boolean isLeaf() {
-			return false;
-		}
+		private EntryPart part;
+		public EntryPartNode(EntryPart e) {
+			part = e;
+			components.put("text", new TreeNodeUtil.Component<String>() {
 
-		@Override
-		public void insert(MutableTreeNode arg0, int arg1) {
-			children.add(arg1, (ChoiceNode) arg0);
-		}
+				@Override
+				public void set(String val) {
+					part.question=val;
+				}
 
-		@Override
-		public void remove(int arg0) {
-			children.remove(arg0);
-		}
+				@Override
+				public String get() {
+					return part.question;
+				}
 
-		@Override
-		public void remove(MutableTreeNode arg0) {
-			children.remove(arg0);
-		}
+			});
+			components.put("icon", new TreeNodeUtil.Component<ImageIcon>() {
 
-		@Override
-		public void removeFromParent() {
-			parent.remove(this);
-		}
+				private ImageIcon icon = ImageGenerator.getEntryPartIcon();
 
-		@Override
-		public void setParent(MutableTreeNode arg0) {
-			parent = arg0;
+				@Override
+				public void set(ImageIcon val) {
+					icon=val;
+				}
+
+				@Override
+				public ImageIcon get() {
+					return icon;
+				}
+			});
 		}
 
 		@Override
@@ -269,30 +227,18 @@ public class EditableTree extends JFrame {
 		contentPane.add(scrollPane, BorderLayout.CENTER);
 
 		JTree tree = new JTree();
-		JTextField field = new JTextField() {
-//			@Override
-//			public Dimension getPreferredSize() {
-//				Dimension dim = super.getPreferredSize();
-//				int length = getText().length();
-//				dim.width += 5;
-//				// dim.width = dim
-//				// dim.width=getText().length()*1.5;
-//				// dim.height += length * 2;
-//				return dim;
-//			}
-		};
+		JTextField field = new JTextField();
 		field.getDocument().addDocumentListener(new DocumentListener() {
 
 			protected void validateEditor(final JTextField field) {
-				// the selectionModel's rowMapper is-a AbstractLayoutCache
-				// BEWARE: implementation detail!
+				if(tree.getSelectionPath().getLastPathComponent() instanceof Entity) {
+					if(((Entity) tree.getSelectionPath().getLastPathComponent()).components.containsKey("text")) {
+						((Entity) tree.getSelectionPath().getLastPathComponent()).components.get("text").set(field.getText());
+					}
+				}
 				TreeSelectionModel model = tree.getSelectionModel();
-				// invalidate all cached node sizes/locations
 				((AbstractLayoutCache) model.getRowMapper()).invalidateSizes();
-				//((AbstractLayoutCache) model.getRowMapper()).treeNodesChanged(new TreeModelEvent(, arg1));
-				// just a fancy cover method for revalidate/repaint
-				tree.treeDidChange();
-				// manually set the component's size
+				tree.revalidate();
 				field.setSize(field.getPreferredSize());
 			}
 
@@ -312,18 +258,20 @@ public class EditableTree extends JFrame {
 			}
 		});
 		tree.setCellRenderer(new DefaultTreeCellRenderer() {
+			/**
+			 *
+			 */
+			private static final long serialVersionUID = -224398418091734517L;
+
 			@Override
-			public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded,
+			public java.awt.Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded,
 					boolean leaf, int row, boolean hasFocus) {
 				DefaultTreeCellRenderer c = (DefaultTreeCellRenderer) super.getTreeCellRendererComponent(tree, value,
 						selected, expanded, leaf, row, hasFocus);
-				MutableTreeNode nodo = (MutableTreeNode) value;
-				if (nodo instanceof ChoicePartNode) {
-					c.setIcon(ImageGenerator.getChoicePartIcon());
-				} else if (nodo instanceof ChoiceNode) {
-					c.setIcon(ImageGenerator.getChoiceIcon());
-				} else {
-					// setIcon(leaf);
+				if(value instanceof Entity) {
+					if(((Entity) value).components.containsKey("icon")) {
+						c.setIcon((Icon) ((Entity) value).components.get("icon").get());
+					}
 				}
 				return c;
 			}
@@ -340,9 +288,15 @@ public class EditableTree extends JFrame {
 		});
 		tree.setEditable(true);
 		scrollPane.setViewportView(tree);
+		DefaultMutableTreeNode base = new DefaultMutableTreeNode("'Exam'");
 		ChoicePartNode root = new ChoicePartNode(new ChoicePart());
 		root.children.add(new ChoiceNode(new Choice()));
-		tree.setModel(new DefaultTreeModel(root));
+		base.add(root);
+		EntryPartNode entry = new EntryPartNode(new EntryPart());
+		base.add(entry);
+		tree.setModel(new DefaultTreeModel(base));
+
+
 	}
 
 }

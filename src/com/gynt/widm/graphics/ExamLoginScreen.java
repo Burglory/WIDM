@@ -1,21 +1,15 @@
 package com.gynt.widm.graphics;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import com.gynt.widm.graphics.util.ImageGenerator;
-
-import javax.swing.UIManager.LookAndFeelInfo;
-import java.awt.Color;
-import javax.swing.JLabel;
-import javax.swing.ImageIcon;
 
 public class ExamLoginScreen extends JPanel {
 

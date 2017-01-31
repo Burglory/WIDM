@@ -1,13 +1,10 @@
 package com.gynt.widm.graphics;
 
 import java.awt.GraphicsDevice;
-
-import javax.swing.JFrame;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import java.awt.Window.Type;
+
+import javax.swing.JFrame;
 
 public class FullscreenFrame extends JFrame {
 	/**

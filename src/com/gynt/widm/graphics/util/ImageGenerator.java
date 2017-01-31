@@ -5,11 +5,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
-import java.awt.Shape;
-import java.awt.Stroke;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
-import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -27,6 +24,8 @@ public class ImageGenerator {
 	private static ImageIcon examicon;
 	private static ImageIcon choiceicon;
 	private static ImageIcon choiceparticon;
+	private static ImageIcon entryparticon;
+	private static ImageIcon textparticon;
 
 	static{
 		try {
@@ -87,9 +86,8 @@ public class ImageGenerator {
 
 		 Graphics2D g = bi.createGraphics(); //create a graphics object to paint to
 		  g.setRenderingHint( RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR );
-		  g.setColor(Color.gray);
-		  //g.setStroke(new BasicStroke(2));
-		  g.fillOval(4, 4, 8, 8);
+		  g.setColor(Color.BLACK);
+		  g.drawString(">", 0, 12);
 		  choiceicon = new ImageIcon(bi);
 		return choiceicon;
 	}
@@ -102,13 +100,38 @@ public class ImageGenerator {
 
 		 Graphics2D g = bi.createGraphics(); //create a graphics object to paint to
 		  g.setRenderingHint( RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR );
-		  g.setColor(Color.gray);
-		  //g.setStroke(new BasicStroke(2));
-		  g.fillOval(4, 1, 4, 4);
-		  g.fillOval(4, 6, 4, 4);
-		  g.fillOval(4, 11, 4, 4);
+		  g.setColor(Color.RED);
+		  g.drawString("?", 0, 12);
 		  choiceparticon = new ImageIcon(bi);
 		return choiceparticon;
+	}
+
+	public static ImageIcon getEntryPartIcon() {
+		if(entryparticon!=null) return entryparticon;
+		int width=16;
+		int height = 16;
+		BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+		 Graphics2D g = bi.createGraphics(); //create a graphics object to paint to
+		  g.setRenderingHint( RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR );
+		  g.setColor(Color.BLUE);
+		  g.drawString("?T", 0, 12);
+		  entryparticon = new ImageIcon(bi);
+		return entryparticon;
+	}
+
+	public static ImageIcon getTextPartIcon() {
+		if(textparticon!=null) return textparticon;
+		int width=16;
+		int height = 16;
+		BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+		 Graphics2D g = bi.createGraphics(); //create a graphics object to paint to
+		  g.setRenderingHint( RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR );
+		  g.setColor(Color.DARK_GRAY);
+		  g.drawString("T", 0, 12);
+		  textparticon = new ImageIcon(bi);
+		return textparticon;
 	}
 
 }

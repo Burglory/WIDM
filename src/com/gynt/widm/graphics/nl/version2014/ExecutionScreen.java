@@ -1,6 +1,5 @@
 package com.gynt.widm.graphics.nl.version2014;
 
-import java.awt.BorderLayout;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
@@ -8,9 +7,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 
 import com.gynt.widm.graphics.AbstractBackgroundScreen;
 import com.gynt.widm.graphics.FullscreenFrame;
