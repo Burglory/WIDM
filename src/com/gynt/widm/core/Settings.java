@@ -4,8 +4,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
@@ -18,6 +20,7 @@ public class Settings {
 		public static Boolean parseRadio(Object val) {
 			return Boolean.parseBoolean((String) val);
 		}
+
 		public static String toString(Boolean c) {
 			return Boolean.toString(c);
 		}
@@ -28,8 +31,12 @@ public class Settings {
 	public static void save() throws IOException {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		PROPERTIES.store(bos, "");
-		Path p = new File(Serialization.PATH_LOADER.getResource("settings.properties").toString().split("file:")[1]).toPath();
-		save(p, bos.toByteArray());
+		try {
+			Path p = Paths.get(Serialization.PATH_LOADER.getResource("settings.properties").toURI());
+			save(p, bos.toByteArray());
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private static void save(Path p, byte[] data) throws IOException {
@@ -37,35 +44,36 @@ public class Settings {
 	}
 
 	public static void load() throws IOException {
-		if(Serialization.PATH_LOADER.getResource("settings.properties")==null) {
-			String path = Serialization.PATH_LOADER.getResource("")+"settings.properties";
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			PROPERTIES.store(bos, "");
+		try {
+			if (Serialization.PATH_LOADER.getResource("settings.properties") == null) {
+				Path path = Paths.get(Serialization.PATH_LOADER.getResource("").toURI()).resolve("settings.properties");
 
-			String[] paths = path.split("/+");
-			if(paths[0].contains("file")) {
-				paths=Arrays.copyOfRange(paths, 1, paths.length);
+				System.out.println(path);
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				PROPERTIES.store(bos, "");
+
+				save(path, bos.toByteArray());
 			}
-			path=String.join("/", paths);
 
-			save(new File(path).toPath(), bos.toByteArray());
-		}
+			Path path = Paths.get(Serialization.PATH_LOADER.getResource("settings.properties").toURI());
 
 			PROPERTIES.clear();
-			ByteArrayInputStream bis = new ByteArrayInputStream(Files.readAllBytes(new File(Serialization.PATH_LOADER.getResource("settings.properties").toString().split("file:/")[1]).toPath()));
+			ByteArrayInputStream bis = new ByteArrayInputStream(Files.readAllBytes(path));
 			PROPERTIES.load(bis);
-
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public static boolean loaded() {
 		return PROPERTIES != null;
 	}
 
-
 	public static PreferenceDir ROOT;
 	static {
 		ROOT = new PreferenceDir();
-		ROOT.name="Preferences";
+		ROOT.name = "Preferences";
 
 	}
 
@@ -95,14 +103,14 @@ public class Settings {
 		}
 
 		private void tell(Object oldValue, Object newValue) {
-			for(ChangeListener cl : listeners) {
+			for (ChangeListener cl : listeners) {
 				cl.onChange(oldValue, newValue);
 			}
 		}
 
 		public void setValue(Object val) {
 			Object oval = getValue();
-			switch(type.getSimpleName()) {
+			switch (type.getSimpleName()) {
 			case "File":
 				PROPERTIES.setProperty(path, val.toString());
 				break;
@@ -127,17 +135,18 @@ public class Settings {
 			default:
 				throw new RuntimeException();
 			}
-			if(oval!=null) {
-				if(!oval.equals(val)) tell(oval, val);
+			if (oval != null) {
+				if (!oval.equals(val))
+					tell(oval, val);
 			} else {
 				tell(oval, val);
 			}
 		}
 
 		public Object getValue() {
-			switch(type.getSimpleName()) {
+			switch (type.getSimpleName()) {
 			case "File":
-				return PROPERTIES.getProperty(path)!=null?new File(PROPERTIES.getProperty(path)):new File("");
+				return PROPERTIES.getProperty(path) != null ? new File(PROPERTIES.getProperty(path)) : new File("");
 			case "String":
 				return PROPERTIES.getProperty(path);
 			case "Boolean":
@@ -147,9 +156,9 @@ public class Settings {
 			case "Integer":
 				return Integer.parseInt(PROPERTIES.getProperty(path));
 			case "Double":
-				return Double.parseDouble(PROPERTIES.getProperty(path)==null?"0.0":PROPERTIES.getProperty(path));
+				return Double.parseDouble(PROPERTIES.getProperty(path) == null ? "0.0" : PROPERTIES.getProperty(path));
 			case "Float":
-				return Float.parseFloat(PROPERTIES.getProperty(path)==null?"0.0":PROPERTIES.getProperty(path));
+				return Float.parseFloat(PROPERTIES.getProperty(path) == null ? "0.0" : PROPERTIES.getProperty(path));
 			default:
 				throw new RuntimeException();
 			}
@@ -158,8 +167,8 @@ public class Settings {
 		public String buildPath() {
 			String path = name;
 			Parentable parent = getParent();
-			while(parent!=null) {
-				path=parent.toString()+"."+path;
+			while (parent != null) {
+				path = parent.toString() + "." + path;
 				parent = parent.getParent();
 			}
 			return path;
@@ -183,18 +192,20 @@ public class Settings {
 		public String description;
 
 		public PreferenceItem lookUp(String name) {
-			for(PreferenceItem child : items) {
-				if(child.name.equals(name))  return child;
+			for (PreferenceItem child : items) {
+				if (child.name.equals(name))
+					return child;
 			}
 			return null;
 		}
 
 		public PreferenceItem registerItem(String name, String description, Class<?> type, Object defaultvalue) {
 			PreferenceItem i = lookUp(name);
-			if(i!=null) return i;
+			if (i != null)
+				return i;
 
 			PreferenceItem result = new PreferenceItem(this, name, type, defaultvalue);
-			result.description=description;
+			result.description = description;
 			items.add(result);
 			return result;
 		}
@@ -220,8 +231,8 @@ public class Settings {
 		public ArrayList<PreferenceSub> subs = new ArrayList<>();
 
 		public PreferenceDir lookUpDir(String name) {
-			for(PreferenceDir child : this.dirs) {
-				if(child.name==name) {
+			for (PreferenceDir child : this.dirs) {
+				if (child.name == name) {
 					return child;
 				}
 			}
@@ -229,8 +240,8 @@ public class Settings {
 		}
 
 		public PreferenceSub lookUpSub(String name) {
-			for(PreferenceSub child : this.subs) {
-				if(child.name==name) {
+			for (PreferenceSub child : this.subs) {
+				if (child.name == name) {
 					return child;
 				}
 			}
@@ -239,23 +250,25 @@ public class Settings {
 
 		public PreferenceDir registerDir(String string) {
 			PreferenceDir i = lookUpDir(string);
-			if(i!=null) return i;
+			if (i != null)
+				return i;
 
 			PreferenceDir result = new PreferenceDir();
-			result.name=string;
-			result.parent=this;
+			result.name = string;
+			result.parent = this;
 			dirs.add(result);
 			return result;
 		}
 
 		public PreferenceSub registerSub(String string, String description) {
 			PreferenceSub i = lookUpSub(string);
-			if(i!=null) return i;
+			if (i != null)
+				return i;
 
 			PreferenceSub result = new PreferenceSub();
-			result.name=string;
-			result.parent=this;
-			result.description=description;
+			result.name = string;
+			result.parent = this;
+			result.description = description;
 			subs.add(result);
 			return result;
 		}
@@ -270,7 +283,6 @@ public class Settings {
 			return name;
 		}
 	}
-
 
 	public Settings() {
 

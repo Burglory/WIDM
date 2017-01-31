@@ -48,8 +48,6 @@ import com.gynt.widm.graphics.util.TreeNodeUtil.Entity;
 import com.gynt.widm.graphics.util.TreeNodeUtil.NoChildrenNode;
 import com.gynt.widm.io.Serialization;
 
-import javafx.scene.control.ComboBox;
-
 import javax.swing.JToolBar;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -269,7 +267,7 @@ public class ExamScreen extends JPanel {
 		}
 
 	}
-	
+
 	public static class TextPartNode extends NoChildrenNode {
 
 		private TextPart part;
@@ -455,7 +453,7 @@ public class ExamScreen extends JPanel {
 						parent.add(new ChoicePartNode(ep));
 						break;
 					}
-						
+
 					}
 				}
 			}
@@ -466,7 +464,7 @@ public class ExamScreen extends JPanel {
 		comboBox.setRenderer(new DefaultListCellRenderer() {
 
 			/**
-			 * 
+			 *
 			 */
 			private static final long serialVersionUID = 5943145235145801746L;
 
@@ -497,7 +495,7 @@ public class ExamScreen extends JPanel {
 
 		});
 		toolBar.add(comboBox);
-		
+
 		comboBox.addItem(ChoicePart.class);
 		comboBox.addItem(EntryPart.class);
 		comboBox.addItem(TextPart.class);
