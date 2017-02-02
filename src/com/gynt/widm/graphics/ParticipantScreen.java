@@ -19,10 +19,11 @@ import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import com.gynt.easysettings.Settings;
+import com.gynt.easysettings.Settings.Item;
+import com.gynt.easysettings.Settings.Sub;
 import com.gynt.widm.core.Participant;
 import com.gynt.widm.core.Preferences;
-import com.gynt.widm.core.Preferences.PreferenceItem;
-import com.gynt.widm.core.Preferences.PreferenceSub;
 import com.gynt.widm.core.Round;
 
 public class ParticipantScreen extends JPanel {
@@ -31,9 +32,9 @@ public class ParticipantScreen extends JPanel {
 	 *
 	 */
 	private static final long serialVersionUID = 8032171346542801207L;
-	private static PreferenceItem passwords;
-	private static PreferenceItem hidemole;
-	private static PreferenceItem pid;
+	private static Item passwords;
+	private static Item hidemole;
+	private static Item pid;
 	private JTable table;
 	private char passwordchar = '\u25CF';
 	private Round round;
@@ -44,10 +45,10 @@ public class ParticipantScreen extends JPanel {
 
 	static {
 
-		passwords = Preferences.ROOT.registerDir("Participants").registerSub("Security","Security").registerItem("Use_passwords","Let participants have a password", Boolean.class, Boolean.TRUE);
-		PreferenceSub general = Preferences.ROOT.registerDir("Participants").registerSub("General","General");
-		hidemole = general.registerItem("Hidden", "Hide who the mole is", Boolean.class, Boolean.TRUE);
-		pid = general.registerItem("ID", "Show participant ID", Boolean.class, Boolean.FALSE);
+		passwords = Preferences.ROOT.registerDir("Participants").registerSub("Security","Security").registerItem("Use_passwords","Let participants have a password", Settings.Type.BOOLEAN, Boolean.TRUE);
+		Sub general = Preferences.ROOT.registerDir("Participants").registerSub("General","General");
+		hidemole = general.registerItem("Hidden", "Hide who the mole is", Settings.Type.BOOLEAN, Boolean.TRUE);
+		pid = general.registerItem("ID", "Show participant ID", Settings.Type.BOOLEAN, Boolean.FALSE);
 
 	}
 
@@ -168,10 +169,10 @@ public class ParticipantScreen extends JPanel {
 			table.getColumnModel().removeColumn(passwordcolumn);
 		}
 
-		pid.listeners.add(new Preferences.ChangeListener() {
+		pid.listeners.add(new Settings.ChangeListener() {
 
 			@Override
-			public void onChange(Object oldValue, Object newValue) {
+			public void onChange(Item src, Object oldValue, Object newValue) {
 				if(oldValue==Boolean.FALSE && newValue==Boolean.TRUE) {
 					table.getColumnModel().addColumn(idcolumn);
 				} else {
@@ -179,10 +180,10 @@ public class ParticipantScreen extends JPanel {
 				}
 			}
 		});
-		hidemole.listeners.add(new Preferences.ChangeListener() {
+		hidemole.listeners.add(new Settings.ChangeListener() {
 
 			@Override
-			public void onChange(Object oldValue, Object newValue) {
+			public void onChange(Item src, Object oldValue, Object newValue) {
 				if(oldValue==Boolean.FALSE && newValue==Boolean.TRUE) {
 					table.getColumnModel().removeColumn(typecolumn);
 				} else {
@@ -190,10 +191,10 @@ public class ParticipantScreen extends JPanel {
 				}
 			}
 		});
-		passwords.listeners.add(new Preferences.ChangeListener() {
+		passwords.listeners.add(new Settings.ChangeListener() {
 
 			@Override
-			public void onChange(Object oldValue, Object newValue) {
+			public void onChange(Item src, Object oldValue, Object newValue) {
 				if(oldValue==Boolean.FALSE && newValue==Boolean.TRUE) {
 					table.getColumnModel().addColumn(passwordcolumn);
 				} else {

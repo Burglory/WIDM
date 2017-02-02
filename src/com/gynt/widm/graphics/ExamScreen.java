@@ -2,7 +2,6 @@ package com.gynt.widm.graphics;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -13,48 +12,40 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JTextField;
+import javax.swing.JToolBar;
 import javax.swing.JTree;
-import javax.swing.ListCellRenderer;
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.tree.AbstractLayoutCache;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
+import com.gynt.easysettings.Settings;
+import com.gynt.easysettings.Settings.Sub;
 import com.gynt.widm.core.ChoicePart;
 import com.gynt.widm.core.ChoicePart.Choice;
-import com.gynt.widm.core.Preferences.PreferenceSub;
-import com.gynt.widm.core.Preferences.Radio;
-import com.gynt.widm.core.TextPart;
 import com.gynt.widm.core.EntryPart;
 import com.gynt.widm.core.Exam;
-import com.gynt.widm.core.ExamPart;
 import com.gynt.widm.core.Preferences;
+import com.gynt.widm.core.TextPart;
 import com.gynt.widm.graphics.util.ImageGenerator;
 import com.gynt.widm.graphics.util.TreeNodeUtil;
 import com.gynt.widm.graphics.util.TreeNodeUtil.ChildrenNode;
 import com.gynt.widm.graphics.util.TreeNodeUtil.Entity;
 import com.gynt.widm.graphics.util.TreeNodeUtil.NoChildrenNode;
 import com.gynt.widm.io.Serialization;
-
-import javax.swing.JToolBar;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JSeparator;
-import javax.swing.SwingConstants;
 
 public class ExamScreen extends JPanel {
 
@@ -63,19 +54,31 @@ public class ExamScreen extends JPanel {
 	 */
 	private static final long serialVersionUID = 4150609711492271645L;
 
+	public static boolean oldstyling;
+	public static boolean refreshedstyling;
+	public static boolean newerstyling;
+	public static boolean lateststyling;
+	public static boolean clues;
+	public static boolean fourthkind;
+	public static boolean custom;
+	public static File custompath;
+	public static boolean none;
+	public static boolean loop;
+	
 	static {
-		PreferenceSub mode = Preferences.ROOT.registerDir("Exam").registerSub("VisualMode","Visual styling of the exam");
-		mode.registerItem("1999-2005",  "Old styling (1999-2005)",Radio.class, Boolean.FALSE);
-		mode.registerItem("2006-2010",  "Refreshed styling (2006-2010)", Radio.class, Boolean.FALSE);
-		mode.registerItem("2011-2014",  "Newer styling (2011-2014)",Radio.class, Boolean.TRUE);
-		mode.registerItem("2015-2017",  "Latest styling (2015-2017)",Radio.class, Boolean.FALSE);
+
+		Sub mode = Preferences.ROOT.registerDir("Exam").registerSub("VisualMode","Visual styling of the exam");
+		mode.registerItem("1999-2005",  "Old styling (1999-2005)",Settings.Type.RADIO, Boolean.FALSE);
+		mode.registerItem("2006-2010",  "Refreshed styling (2006-2010)",Settings.Type.RADIO, Boolean.FALSE);
+		mode.registerItem("2011-2014",  "Newer styling (2011-2014)",Settings.Type.RADIO, Boolean.TRUE);
+		mode.registerItem("2015-2017",  "Latest styling (2015-2017)",Settings.Type.RADIO, Boolean.FALSE);
 		mode = Preferences.ROOT.registerDir("Exam").registerSub("MusicMode","Music styling of the exam");
-		mode.registerItem("clues", "Old (Looking for Clues - David Arnold)", Radio.class, Boolean.FALSE);
-		mode.registerItem("fourthkind", "New (The Fourth Kind - Atli Orvarsson)", Radio.class, Boolean.FALSE);
-		mode.registerItem("custom", "Custom music", Radio.class, Boolean.TRUE);
-		mode.registerItem("custompath", "Custom music path: ", File.class, Serialization.PATH_LOADER.getResource(".").getPath());
-		mode.registerItem("none", "No music", Radio.class, Boolean.TRUE);
-		mode.registerItem("loop", "Loop the music during exam", Boolean.class, Boolean.FALSE);
+		mode.registerItem("clues", "Old (Looking for Clues - David Arnold)", Settings.Type.RADIO, Boolean.FALSE);
+		mode.registerItem("fourthkind", "New (The Fourth Kind - Atli Orvarsson)", Settings.Type.RADIO, Boolean.FALSE);
+		mode.registerItem("custom", "Custom music", Settings.Type.RADIO, Boolean.TRUE);
+		mode.registerItem("custompath", "Custom music path: ", Settings.Type.FILE, Serialization.PATH_LOADER.getResource(".").getPath());
+		mode.registerItem("none", "No music", Settings.Type.RADIO, Boolean.TRUE);
+		mode.registerItem("loop", "Loop the music during exam", Settings.Type.BOOLEAN, Boolean.FALSE);
 
 	}
 

@@ -29,11 +29,12 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import com.gynt.easysettings.Settings;
+import com.gynt.easysettings.Settings.Item;
 import com.gynt.widm.core.Game;
+import com.gynt.widm.core.GlobalSettings;
 import com.gynt.widm.core.Languages;
 import com.gynt.widm.core.Preferences;
-import com.gynt.widm.core.Settings;
-import com.gynt.widm.core.Settings.PreferenceItem;
 import com.gynt.widm.core.util.ExceptionDisplay;
 import com.gynt.widm.graphics.util.ImageGenerator;
 import com.gynt.widm.io.GameFileContext;
@@ -44,20 +45,20 @@ public class MainWindow extends JFrame {
 	 *
 	 */
 	private static final long serialVersionUID = 3557878564872334551L;
-	private static PreferenceItem playmusic;
+	private static Item playmusic;
 	private JPanel contentPane;
 	private JTabbedPane tabbedPane;
 	private Game game;
 
 	static {
 		Languages.initialize();
-		playmusic = Settings.ROOT.registerDir("General").registerSub("Music", "Music settings").registerItem("startupmusic","Play startup music",Boolean.class, Boolean.TRUE);
+		playmusic = GlobalSettings.ROOT.registerDir("General").registerSub("Music", "Music settings").registerItem("startupmusic","Play startup music",Settings.Type.BOOLEAN, Boolean.TRUE);
 		ImageGenerator.wakey();
 	}
 
 	private static void setup() {
 		try {
-			Settings.load();
+			GlobalSettings.load();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -200,7 +201,7 @@ public class MainWindow extends JFrame {
 		JMenuItem mntmNew = new JMenuItem("New game");
 		mntmNew.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				loadGame(new Game());
+				initForGame(new Game());
 			}
 		});
 		mntmNew.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
@@ -243,7 +244,7 @@ public class MainWindow extends JFrame {
 		mntmSettings.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				SettingsPanel sp = new SettingsPanel();
-				sp.render();
+//				sp.render();
 				JDialog j = new JDialog(MainWindow.this, "Settings", true);
 				j.setContentPane(sp);
 				j.pack();
@@ -253,7 +254,7 @@ public class MainWindow extends JFrame {
 					@Override
 					public void windowClosing(WindowEvent e) {
 						try {
-							Settings.save();
+							GlobalSettings.save();
 						} catch (IOException e2) {
 							// TODO Auto-generated catch block
 							e2.printStackTrace();
@@ -297,15 +298,15 @@ public class MainWindow extends JFrame {
 
 	}
 
-	private void loadGame(Game g) {
+	private void initForGame(Game g) {
 		game = g;
 		game.preferences=new Preferences(game);
-		try {
-			game.preferences.load();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			game.preferences.load();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		contentPane.removeAll();
 		contentPane.add(new GamePanel(g), BorderLayout.CENTER);
 	}

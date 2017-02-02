@@ -10,17 +10,18 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import com.gynt.widm.core.Settings.ChangeListener;
-import com.gynt.widm.core.Settings.PreferenceSub;
-import com.gynt.widm.core.Settings.Radio;
+import com.gynt.easysettings.Settings;
+import com.gynt.easysettings.Settings.ChangeListener;
+import com.gynt.easysettings.Settings.Item;
+import com.gynt.easysettings.Settings.Sub;
 import com.gynt.widm.io.Serialization;
 
 public class Languages {
 	
-	private static PreferenceSub language;
+	private static Sub language;
 	
 	static {
-		language = Settings.ROOT.registerDir("General").registerSub("Language","Language");
+		language = GlobalSettings.ROOT.registerDir("General").registerSub("Language","Language");
 	}
 
 	private static HashMap<String, ResourceBundle> bundlemap = new HashMap<>();
@@ -41,10 +42,10 @@ public class Languages {
 			for(File file : files) {
 				String lang = file.getName().split("[.]")[0];
 				bundlemap.put(lang, ResourceBundle.getBundle("languages."+lang, Locale.getDefault(), Serialization.PATH_LOADER));
-				language.registerItem(lang, lang, Radio.class, Boolean.TRUE).listeners.add(new ChangeListener() {
+				language.registerItem(lang, lang, Settings.Type.RADIO, Boolean.TRUE, new Settings.ChangeListener() {
 					
 					@Override
-					public void onChange(Object oldValue, Object newValue) {
+					public void onChange(Item src, Object oldValue, Object newValue) {
 						if(newValue==Boolean.TRUE) {
 							LANGUAGE=bundlemap.get(lang);
 						}
@@ -60,10 +61,10 @@ public class Languages {
 	private static void initializeBuiltin(String lang) {
 		bundlemap.put(lang, ResourceBundle.getBundle("languages."+lang));
 		LANGUAGE=bundlemap.get(lang);
-		language.registerItem(lang, "English", Radio.class, Boolean.TRUE).listeners.add(new ChangeListener() {
+		language.registerItem(lang, "English", Settings.Type.RADIO, Boolean.TRUE, new ChangeListener() {
 			
 			@Override
-			public void onChange(Object oldValue, Object newValue) {
+			public void onChange(Item src, Object oldValue, Object newValue) {
 				if(newValue==Boolean.TRUE) {
 					LANGUAGE=bundlemap.get(lang);
 				}

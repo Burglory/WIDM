@@ -13,15 +13,16 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
-import com.gynt.widm.core.Settings;
-import com.gynt.widm.core.Settings.PreferenceItem;
+import com.gynt.easysettings.Settings;
+import com.gynt.easysettings.Settings.Item;
+import com.gynt.widm.core.GlobalSettings;
 import com.gynt.widm.io.Serialization;
 
 public class ImageGenerator {
 
 	private static BufferedImage i;
 	private static BufferedImage i2;
-	private static PreferenceItem brightness;
+	private static Item brightness;
 	private static ImageIcon examicon;
 	private static ImageIcon choiceicon;
 	private static ImageIcon choiceparticon;
@@ -38,7 +39,7 @@ public class ImageGenerator {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		brightness = Settings.ROOT.registerDir("Exam").registerSub("Background", "Background").registerItem("Brightness", "Brightness", Float.class, Float.valueOf(0.80f));
+		brightness = GlobalSettings.ROOT.registerDir("Exam").registerSub("Background", "Background").registerItem("Brightness", "Brightness", Settings.Type.DOUBLE, Double.valueOf(0.80D));
 	}
 
 	public static void wakey() {

@@ -3,7 +3,6 @@ package com.gynt.widm.graphics.util;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
