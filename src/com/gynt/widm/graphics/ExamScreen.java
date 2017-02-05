@@ -64,7 +64,7 @@ public class ExamScreen extends JPanel {
 	public static File custompath;
 	public static boolean none;
 	public static boolean loop;
-	
+
 	static {
 
 		Sub mode = Preferences.ROOT.registerDir("Exam").registerSub("VisualMode","Visual styling of the exam");
@@ -393,7 +393,8 @@ public class ExamScreen extends JPanel {
 		});
 		tree.setEditable(true);
 		scrollPane.setViewportView(tree);
-		ExamNode base = new ExamNode(new Exam());
+		Exam exam = new Exam();
+		ExamNode base = new ExamNode(exam);
 		ChoicePartNode root = new ChoicePartNode(new ChoicePart());
 		root.children.add(new ChoiceNode(new Choice()));
 		base.add(root);
@@ -428,17 +429,45 @@ public class ExamScreen extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				if(tree.getSelectionPath()==null) return;
 				MutableTreeNode last = (MutableTreeNode) tree.getSelectionPath().getLastPathComponent();
-				if(last instanceof ChildrenNode) {
-					if(last instanceof ChoicePartNode) {
-						Choice c = new Choice();
-						((ChoicePartNode) last).part.choices.add(c);
-						((ChildrenNode) last).add(new ChoiceNode(c));
+				System.out.println(last.getClass());
+				if(last instanceof ExamNode) {
+					ExamNode parent = (ExamNode) last;
+					switch(((Class<?>) comboBox.getSelectedItem()).getSimpleName()) {
+					case "EntryPart": {
+						EntryPart ep = new EntryPart();
+						parent.part.parts.add(ep);
+						parent.add(new EntryPartNode(ep));
+						break;
 					}
-				} else {
+					case "TextPart": {
+						TextPart ep = new TextPart();
+						parent.part.parts.add(ep);
+						parent.add(new TextPartNode(ep));
+						break;
+					}
+					case "ChoicePart": {
+						ChoicePart ep = new ChoicePart();
+						parent.part.parts.add(ep);
+						parent.add(new ChoicePartNode(ep));
+						break;
+					}
+
+					}
+					model.nodesWereInserted(last, new int[]{last.getChildCount()-1});
+				}else if(last instanceof ChoicePartNode) {
+					Choice c = new Choice();
+					((ChoicePartNode) last).part.choices.add(c);
+					((ChildrenNode) last).add(new ChoiceNode(c));
+					model.nodesWereInserted(last, new int[]{last.getChildCount()-1});
+					System.out.println(last.getChildCount());
+				}else if(last instanceof ChildrenNode) {
+					if(last instanceof ChoicePartNode) {
+
+					}
+				} else if(last instanceof NoChildrenNode) {
 					ExamNode parent = (ExamNode) last.getParent();
 					switch(((Class<?>) comboBox.getSelectedItem()).getSimpleName()) {
 					case "EntryPart": {
-						System.out.println("ADding");
 						EntryPart ep = new EntryPart();
 						parent.part.parts.add(ep);
 						parent.add(new EntryPartNode(ep));

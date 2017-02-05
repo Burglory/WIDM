@@ -290,23 +290,11 @@ public class MainWindow extends JFrame {
 		tabbedPane.addTab("Welcome", null, welcomePanel, null);
 		welcomePanel.setLayout(new BorderLayout(0, 0));
 
-		// RoundScreen round1Panel = new RoundScreen();
-		// tabbedPane.addTab("Round 1", null, round1Panel, null);
-		//
-		// PreferencesScreen preferencesPanel = new PreferencesScreen();
-		// tabbedPane.addTab("Preferences", null, preferencesPanel, null);
-
 	}
 
 	private void initForGame(Game g) {
 		game = g;
 		game.preferences=new Preferences(game);
-//		try {
-//			game.preferences.load();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 		contentPane.removeAll();
 		contentPane.add(new GamePanel(g), BorderLayout.CENTER);
 	}
@@ -315,9 +303,6 @@ public class MainWindow extends JFrame {
 		// Debug
 		MainWindow.setup();
 		MainWindow a = new MainWindow();
-		// a.tabbedPane.remove(1);
-		// a.tabbedPane.insertTab("Round 1", null, new RoundScreen(new Round()),
-		// null, 1);
 		a.setVisible(true);
 	}
 
